@@ -7,28 +7,9 @@
             <div class="flex flex-row md:gap-4 items-center px-4 h-fit md:h-14  border-b bg-gray-900">
                 <div class="flex gap-2 w-1/4 text-4xl font-extrabold text-white">
                     <span>{{ 'Details' | transloco }}</span>
-                    <span class="hidden sm:flex">{{ 'Complaint' | transloco }}</span>
+                    <span class="hidden sm:flex">{{ 'Request' | transloco }}</span>
                 </div>
-                <div class="flex w-3/4 items-center justify-end">
-                    <!-- Delete button -->
-                    <button
-                        class="mr-2 text-red-500 hover:bg-red-500 hover:text-gray-900 transition-all duration-400"
-                        mat-stroked-button
-                        type="button"
-                        (click)="deleteOne()"
-                    >
-                        <span class="ml-2 mr-1">{{ 'Delete' | transloco }}</span>
-                    </button>
-                    <!-- Update button -->
-                    <button
-                        class="mr-2 text-blue-500 hover:bg-blue-500 hover:text-gray-900 transition-all duration-400"
-                        mat-stroked-button
-                        type="submit"
-                        (click)="updateOne()"
-                    >
-                        <span class="ml-2 mr-1">{{ 'Update' | transloco }}</span>
-                    </button>
-                </div>
+              
             </div>
             <!-- Main -->
             <div class="flex flex-col flex-auto h-[calc(100vh-8rem)] bg-gray-100 overflow-y-auto">
@@ -69,47 +50,54 @@
                                 <input [(ngModel)]="complaint.status" matInput name="status" type="text" readonly />
                             </mat-form-field>
                         </div>
-                       
                     
+                        <!-- Assign Button TO to tech-->
+                      
+                            <div class="sm:col-span-3 flex ml-20 flex-wrap justify-center gap-4">
+                                <!-- Start Working Button -->
+                                <button 
+                                    mat-raised-button 
+                                    color="primary" 
+                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
+                                    [disabled]="complaint.status !== 'Paused'"
+                                    (click)="StartWorking()">
+                                    {{ 'Start Working' | transloco }}
+                                </button>
+
+                                <!-- Pause button-->
+                                <button 
+                                    mat-raised-button 
+                                    color="primary" 
+                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
+                                    [disabled]="complaint.status !== 'In Progress'"
+                                    (click)="PauseWorking()">
+                                    {{ 'Pause Working' | transloco }}
+                                </button>
+
+                                <!-- Finish Working Button -->
+                                <button 
+                                    mat-raised-button 
+                                    color="primary" 
+                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
+                                    [disabled]="complaint.status !== 'In Progress'"
+                                    (click)="FinishWorking()">
+                                    {{ 'Finish Working' | transloco }}
+                                </button>
+
+                            
+                                <!-- Request Return Button -->
+                                <button 
+                                    mat-raised-button 
+                                    color="warn" 
+                                    (click)="requestReturn()"
+                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out">
+                                    {{ 'Request a return to the Supervisor' | transloco }}
+                                </button>
+                            </div>
                                                  
                     </div>
-                    @for (item of report; track item._id) {
-                        <div class="mt-8 bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
-                          <div class="bg-blue-50 px-6 py-4 border-b border-blue-200">
-                            <h3 class="text-xl font-bold text-blue-900 flex items-center gap-2">
-                              <mat-icon class="text-blue-600">Description</mat-icon>
-                              Technician Report
-                            </h3>
-                            <p class="text-sm text-blue-700 mt-1">
-                              Submitted on: {{ item.createdAt | date: 'fullDate' }} at {{ item.createdAt | date: 'shortTime' }}
-                            </p>
-                          </div>
-                      
-                          <div class="p-6 space-y-6">
-                            <div>
-                              <h4 class="text-md font-semibold text-gray-800 mb-1">Findings</h4>
-                              <p class="bg-gray-50 p-4 rounded-md text-gray-700 leading-relaxed border border-gray-200 whitespace-pre-line">
-                                {{ item.finding }}
-                              </p>
-                            </div>
-                      
-                            <div>
-                              <h4 class="text-md font-semibold text-gray-800 mb-1">Actions Taken</h4>
-                              <p class="bg-gray-50 p-4 rounded-md text-gray-700 leading-relaxed border border-gray-200 whitespace-pre-line">
-                                {{ item.actions }}
-                              </p>
-                            </div>
-                          </div>
-                      
-                          <div class="px-6 py-3 bg-gray-50 text-sm text-right text-gray-500 border-t">
-                            Technician ID: {{ item.userId || 'N/A' }}
-                          </div>
-                        </div>
-                      }
                 </div>
             </div>
         </form>
     </div>
-   
-  
 }

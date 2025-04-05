@@ -15,7 +15,7 @@ import { FeatureAuth } from '../models/feature-auth';
 })
 export class UserService {
   endpointAuth = `${environment.api}/users`;
-  keyAccessToken = 'access_token';
+  keyAccessToken = 'accessToken';
   _user = new BehaviorSubject<User | null>(null);
   _defaultLink = new BehaviorSubject<string | null>(null);
   _features: BehaviorSubject<FeatureAuth[] | null> = new BehaviorSubject<FeatureAuth[] | null>(
@@ -199,6 +199,10 @@ export class UserService {
     }
     return false;
   }
+  getTechs(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.endpointAuth}/group/67ec5dee6f757a0f46501b82`);
+
 
  
+}
 }

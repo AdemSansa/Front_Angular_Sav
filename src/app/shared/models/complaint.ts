@@ -7,6 +7,7 @@ export class Complaint {
   description?: string;
   code?: string;
   status?: string;
+  assignedTo?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

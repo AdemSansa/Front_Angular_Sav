@@ -15,9 +15,14 @@ import { Product } from 'app/shared/models/product';
 import { MatSelectModule } from '@angular/material/select';
 import { Pagination } from 'app/shared/models/pagination';
 import { FilterOptions } from 'app/shared/models/filter-options';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
+
+// Cast `pdfMake` as any to avoid assignment issues
 import { MatDialogModule } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import autoTable from 'jspdf-autotable';
+
+
 @Component({
   selector: 'app-details',
   templateUrl: './add.component.html',
@@ -40,6 +45,7 @@ export class AddComponent implements OnInit {
 
   showDischargeModal = false;
 
+  _productService = inject(ProductService);
   filterOptions: FilterOptions = new FilterOptions();
     currentSize = 10;
     currentPage = 1;
@@ -57,7 +63,6 @@ export class AddComponent implements OnInit {
   
     //********* INJECT SERVICES ***********//
    _complaintService= inject(ComplaintService);
-   _productService = inject(ProductService)
     _router= inject(Router);
     _fuseConfirmationService= inject(FuseConfirmationService);
     _route= inject(ActivatedRoute);
@@ -98,8 +103,9 @@ export class AddComponent implements OnInit {
 
         console.log(this.complaint);
         
-        this._complaintService.createOne(this.complaint).subscribe(() => {
-        
+        this._complaintService.createOne(this.complaint).subscribe((res) => {
+
+          this.complaint = res;
           this.onSub();
           this._router.navigate([`../`], { relativeTo: this._route }).then();
         })
@@ -135,15 +141,67 @@ export class AddComponent implements OnInit {
   }
 
   printDischarge() {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text('Discharge Confirmation', 20, 20);
-    doc.setFontSize(12);
-    doc.text('This document confirms that the client has disposed of the broken product on-site.', 20, 40);
+    
+      const complaintDate = new Date().toLocaleDateString(); // More readable format
 
-    // Save or print PDF
-    doc.save('Discharge.pdf');
+      const trackingLink = `https://tracking-link.com/${this.complaint.code}`; // Replace with actual tracking link
+      const doc = new jsPDF();
+      
+      // Set font styles
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.text('Discharge Receipt', 105, 20, { align: 'center' });
+      
+      // Add a line below the title
+      doc.setLineWidth(0.5);
+      doc.line(20, 25, 190, 25);
+      
+      // Add some space
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      
+      // Border box for main details
+      doc.roundedRect(15, 35, 180, 40, 3, 3);
+      doc.text(`Complaint Code: ${this.complaint.code}`, 20, 40);
+      doc.text(`Client Name: ${this.complaint.name}`, 20, 50);
+      doc.text(`Date: ${complaintDate}`, 20, 60);
+      doc.text(`Check Status: ${trackingLink}`, 20, 70);
+      
+      // Table of disposed products
+      const headers = [['Product', 'Quantity']];
+      console.log(this.complaint.product);
+      
+      this._productService.getOne(this.complaint.product).subscribe((product) => {
+        this.products.push(product);
+      }
+    )
+
+      const rows = this.products.map((product) => [product.name]);
+
+    
+      
+      // Draw table
+      (autoTable as any)(doc, {
+        startY: 80,
+        head: headers,
+        body: rows,
+        theme: 'striped',
+        styles: { fontSize: 10 },
+        
+        headStyles: { fillColor: [44, 62, 80] },
+      });
+      
+      // Save the document
+      doc.save(`Discharge_${this.complaint.code}.pdf`);
+    
+  
+ 
   }
+
+  
+
+
+  
   resetForm(myForm: NgForm, event) {
     event.stopPropagation();
     if (myForm.pristine) {

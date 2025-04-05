@@ -1,0 +1,20 @@
+
+<h2 mat-dialog-title>Assign Technician</h2>
+<mat-dialog-content>
+  <mat-form-field class="w-full">
+    <mat-label>Select a Technician</mat-label>
+    <mat-select  [(ngModel)]="selectedTechnician" >
+        @for (tech of data.technicians; track tech._id) {
+      <mat-option  [value]="tech._id">
+        {{ tech.name }}
+      </mat-option>
+    }
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-button color="primary" (click)="assignTechnician()" [disabled]="!selectedTechnician">
+    Assign
+  </button>
+</mat-dialog-actions>
