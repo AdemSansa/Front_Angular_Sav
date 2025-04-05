@@ -15,6 +15,7 @@ import {TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../shared/services/loading.service";
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
+import { UserService } from 'app/shared/services/user.service';
 
 @Component({
   selector: 'app-list',
@@ -57,8 +58,12 @@ export class ListComponent implements OnInit {
   filterStatus: string[] = [];
   filterSearch: string;
 
+
+  _userService = inject(UserService)
   ngOnInit(): void {
     this.getList();
+
+    
   }
   pageChanged(event: PageEvent ): void {
     let { pageIndex } = event;

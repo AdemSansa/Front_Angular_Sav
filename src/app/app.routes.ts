@@ -4,6 +4,8 @@ import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import {FeatureCodes} from "./shared/enums/feature-codes";
 import { IsAuthorizedGuard } from 'app/core/auth/guards/isAuthorized.guard';
+import { UserComponent } from './layout/common/user/user.component';
+import { ChartComponent } from 'ng-apexcharts';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -171,6 +173,26 @@ export const appRoutes: Route[] = [
                             feature: FeatureCodes.complaints,
                         },
                         loadChildren: () => import('app/modules/admin/apps/complaints/complaints.routing'),
+                    },
+                    {
+                        canActivate: [IsAuthorizedGuard],
+                        canActivateChild: [IsAuthorizedGuard],
+                        path: 'tech',
+                        data: {
+                            breadcrumb: 'Requests',
+                            feature: FeatureCodes.complaints,
+                        },
+                        loadChildren: () => import('app/modules/tech/apps/supervisor/all-requests/all-requests.route'),
+                    },
+                    {
+                        canActivate: [IsAuthorizedGuard],
+                        canActivateChild: [IsAuthorizedGuard],
+                        path: 'my-work',
+                        data: {
+                            breadcrumb: 'My Work',
+                            feature: FeatureCodes.complaints,
+                        },
+                        loadChildren: () => import('app/modules/tech/apps/tech/my-work/my-work.route'),
                     }
                 ],
             },

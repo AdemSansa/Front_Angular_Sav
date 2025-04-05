@@ -1,0 +1,89 @@
+
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:gap-4 items-center px-4 h-fit md:h-14 border-b bg-gray-900">
+      <div class="w-full text-center md:text-left md:w-1/4 text-4xl font-extrabold text-white">{{ 'Requests' | transloco }}</div>
+      <div class="flex w-full md:w-3/4 items-start md:items-center justify-between">
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript md:mt-5 w-3/4">
+          <mat-icon class="icon-size-5" matPrefix [svgIcon]="'feather:search'"></mat-icon>
+          <input matInput [(ngModel)]="filterSearch" (ngModelChange)="updateSearch()" [autocomplete]="'off'" placeholder="{{ 'Search' | transloco }}" />
+        </mat-form-field>
+       
+      </div>
+    </div>
+    
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+      <div class="flex flex-col flex-auto sm:mb-18">
+        @if (displayedList?.data?.length > 0) {
+        <!-- Header -->
+        <div class="row-grid grid z-10 top-0 shadow items-center gap-4 py-2 px-4 md:px-6 text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
+          <div class="hidden sm:flex">N°</div>
+          <div class="hidden sm:flex">{{ 'Code' | transloco }}</div>
+          <div class="flex">{{ 'Name' | transloco }}</div>
+          <div class="hidden md:flex">{{ 'Phone' | transloco }}</div>
+          <div class="hidden sm:flex">{{ 'Description' | transloco }}</div>
+          <div class="flex">{{ 'Status' | transloco }}</div>
+            <div class="flex justify-center">{{ 'Assigned to ' | transloco }}</div>
+          <div class="flex justify-end">
+            <button mat-icon-button (click)="openFilter = true">
+              <mat-icon class="icon-size-5" [svgIcon]="'feather:filter'"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-hidden sm:overflow-y-auto">
+          <div class="flex-1 sm:grid sm:flex-0">
+            <!-- Rows -->
+            <ng-container>
+              @for (row of displayedList?.data; track row) {
+              <div class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b" (click)="isScreenSmall ? openShow(row) : null">
+                <div class="hidden sm:flex">{{ $index + 1 }}</div>
+                <div class="hidden sm:flex truncate">{{ row.code }}</div>
+                <div class="flex truncate">{{ row.name }}</div>
+                <div class="hidden md:flex truncate">{{ row.phone }}</div>
+                <div class="hidden sm:flex truncate">{{ row.description }}</div>
+                @if( row.status == 'Submitted' ) {
+
+                <div class="flex truncate">
+                  <span class="text-red-500 font-bold">{{ row.status }}</span>
+                </div>
+                }
+                @if( row.status == 'Handeled By Tech')
+                {
+                <div class="flex truncate">
+                  <span class="text-blue-500 font-bold">{{ row.status }}</span>
+                </div>
+                }
+                @if (row.assignedTo) {
+                    <div class="hidden sm:flex items-center px-2 py-1 text-sm font-medium text-green-700 bg-green-200 rounded-lg">
+                        {{ row.assignedTo }}
+                    </div>
+                }
+                @if (!row.assignedTo) {
+                    <div class="hidden sm:flex items-center px-2 py-1 text-sm font-medium text-red-700 bg-red-200 rounded-lg">
+                        Not Assigned
+                    </div>
+                }
+                <div class="flex justify-center">
+                  <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+                  </button>
+                  <mat-menu #actionMenu="matMenu">
+                    <button mat-menu-item (click)="openShow(row)">
+                      <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                      <span>{{ 'View' | transloco }}</span>
+                    </button>
+                   
+                  </mat-menu>
+                </div>
+              </div>
+              }
+            </ng-container>
+          </div>
+        </div>
+        <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent" [showFirstLastButtons]="true" (page)="pageChanged($event)" [length]="displayedList?.total" [pageSize]="currentSize" [pageSizeOptions]="[5, 10, 20, 50, 100]"></mat-paginator>
+        }
+      </div>
+    </div>
+  </div>
+  

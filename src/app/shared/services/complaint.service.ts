@@ -48,7 +48,44 @@ export class ComplaintService {
   updateOne(complaint: Complaint): Observable<null> {
     return this.http.patch<null>(`${this.endpoint}/${complaint._id}`, { complaint });
   }
-  assignTechnician(complaintId:string,UserId:string): Observable<null> {
-    return this.http.patch<null>(`${this.endpoint}/${complaintId}/assign`, { complaintId, UserId });
+  assignTechnician(complaintId:string,technicianId:string): Observable<null> {
+    return this.http.post<null>(`${this.endpoint}/assign`, { complaintId, technicianId });
   }
+  getSubmittedComplaints( limit: string,
+    page: string,
+    search: string,
+    filterType:string,
+    filterStatus:string,
+): Observable<Pagination<Complaint>> {
+  let searchParams = new HttpParams();
+  searchParams = searchParams.append('limit', limit);
+  searchParams = searchParams.append('page', page);
+  if (search) {
+    searchParams = searchParams.append('search', search);
+  }
+  if (filterType) {
+    searchParams = searchParams.append('filterType', filterType);
+  }
+  if (filterStatus) {
+    searchParams = searchParams.append('filterStatus', filterStatus);
+  }
+  return this.http.get<Pagination<Complaint>>(`${this.endpoint}/requests/submitted`, {
+    params: searchParams,
+  });
 }
+getMywork(id:string)
+: Observable<Pagination<Complaint>> {
+  let searchParams = new HttpParams();
+  searchParams = searchParams.append('id', id);
+  return this.http.get<Pagination<Complaint>>(`${this.endpoint}/requests/my-work`, {
+    params: searchParams,
+  }
+  );
+}
+startWorking(id:string): Observable<null> {
+  return this.http.post<null>(`${this.endpoint}/requests/my-work/${id}`, {});
+
+}
+}
+  
+

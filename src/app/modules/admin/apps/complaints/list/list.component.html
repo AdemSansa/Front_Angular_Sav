@@ -36,51 +36,69 @@
             <!-- Rows -->
             <ng-container>
               @for (row of displayedList?.data; track row) {
-              <div class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b" (click)="isScreenSmall ? openShow(row) : null">
-                <div class="hidden sm:flex">{{ $index + 1 }}</div>
-                <div class="hidden sm:flex truncate">{{ row.code }}</div>
-                <div class="flex truncate">{{ row.name }}</div>
-                <div class="hidden md:flex truncate">{{ row.phone }}</div>
-                <div class="hidden sm:flex truncate">{{ row.description }}</div>
-                @if( row.status == 'Submitted' ) {
-
-                <div class="flex truncate">
-                  <span class="text-red-500 font-bold">{{ row.status }}</span>
-                </div>
-                }
-                @if( row.status == 'In Progress' ) {
-                <div class="flex truncate">
-                  <span class="text-yellow-500 font-bold">{{ row.status }}</span>
-                </div>
-                }
-                @if( row.status == 'Resolved' ) {
+                <div
+                  class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
+                  class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
+                  [class.bg-red-200]="row.status === 'Under Review'"
+                  [class.bg-green-100]="row.status==='Resolved'"
+               
+                  (click)="isScreenSmall ? openShow(row) : null"
+                >
+                  <div class="hidden sm:flex">{{ $index + 1 }}</div>
+                  <div class="hidden sm:flex truncate">{{ row.code }}</div>
+                  <div class="flex truncate">{{ row.name }}</div>
+                  <div class="hidden md:flex truncate">{{ row.phone }}</div>
+                  <div class="hidden sm:flex truncate">{{ row.description }}</div>
+            
+                  @if (row.status == 'Submitted') {
                     <div class="flex truncate">
-                        <span class="text-green-500 font-bold">{{ row.status }}</span>
-                      </div>
-                }
-                
-                <div class="flex justify-center">
-                  <button mat-icon-button [matMenuTriggerFor]="actionMenu">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                  </button>
-                  <mat-menu #actionMenu="matMenu">
-                    <button mat-menu-item (click)="openShow(row)">
-                      <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
-                      <span>{{ 'View' | transloco }}</span>
+                      <span class="text-red-500 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
+                  @if (row.status == 'In Progress') {
+                    <div class="flex truncate">
+                      <span class="text-yellow-500 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
+                  @if (row.status == 'Resolved') {
+                    <div class="flex truncate">
+                      <span class="text-green-500 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
+                  @if (row.status == 'Handeled By Tech') {
+                    <div class="flex truncate">
+                      <span class="text-blue-500 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
+                  @if (row.status == 'Under Review') {
+                    <div class="flex truncate">
+                      <span class="text-red-600 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
+            
+                  <div class="flex justify-center">
+                    <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                      <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
                     </button>
-                    <button mat-menu-item (click)="openEdit(row)">
-                      <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
-                      <span>{{ 'Edit' | transloco }}</span>
-                    </button>
-                    <button mat-menu-item (click)="deleteOne(row)">
-                      <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                      <span>{{ 'Delete' | transloco }}</span>
-                    </button>
-                  </mat-menu>
+                    <mat-menu #actionMenu="matMenu">
+                      <button mat-menu-item (click)="openShow(row)">
+                        <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                        <span>{{ 'View' | transloco }}</span>
+                      </button>
+                      <button mat-menu-item (click)="openEdit(row)">
+                        <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                        <span>{{ 'Edit' | transloco }}</span>
+                      </button>
+                      <button mat-menu-item (click)="deleteOne(row)">
+                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        <span>{{ 'Delete' | transloco }}</span>
+                      </button>
+                    </mat-menu>
+                  </div>
                 </div>
-              </div>
               }
             </ng-container>
+            
           </div>
         </div>
         <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent" [showFirstLastButtons]="true" (page)="pageChanged($event)" [length]="displayedList?.total" [pageSize]="currentSize" [pageSizeOptions]="[5, 10, 20, 50, 100]"></mat-paginator>

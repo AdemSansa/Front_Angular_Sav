@@ -12,7 +12,10 @@ import {LoadingService} from "../../../../../../../shared/services/loading.servi
 import {forkJoin} from "rxjs";
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
-import Swal from 'sweetalert2';
+import { ReportService } from 'app/shared/services/report.service';
+import { Report } from 'app/shared/models/report';
+import { DatePipe } from '@angular/common';
+import { UserService } from 'app/shared/services/user.service';
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -26,15 +29,19 @@ import Swal from 'sweetalert2';
         MatInput,
         ReactiveFormsModule,
         TranslocoPipe,
+        DatePipe
     ],
 })
 export class DetailsComponent implements OnInit {
     //********* INJECT SERVICES ***********//
     _complaintService= inject(ComplaintService);
+    _reportService= inject(ReportService);
     _router= inject(Router);
     _route= inject(ActivatedRoute);
     _fuseConfirmationService= inject(FuseConfirmationService);
     _loadingService= inject(LoadingService);
+    report:Report[] = [];
+    _userService= inject(UserService);    
     //********* DECLARE CLASSES/ENUMS ***********//
     id = this._route.snapshot.paramMap.get('id') || undefined;
     complaint = new Complaint();
@@ -53,6 +60,7 @@ export class DetailsComponent implements OnInit {
                 }
             });
         }
+        this.getReport();
     }
     updateOne() {
         this._router.navigate([`/home/companies/${this.complaint._id}/edit`]).then();
@@ -81,5 +89,37 @@ export class DetailsComponent implements OnInit {
             }
         });
     }
+
+
+    getReport() {
+    this._reportService.getByComplaintId(this.id ).subscribe({
+      next: (result) => {
+        
+        this.report = result;
+        this.report.forEach((report) => {
+            report.createdAt = new Date(report.createdAt!);
+            report.updatedAt = new Date(report.updatedAt!);
+            this._userService.getOne(report.userId!).subscribe({
+                next: (user) => {
+                    report.userId = user.name;
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
+            }   );
+        
+        console.log(this.report);
+        
+      },
+        error: (err) => {
+            console.log(err);
+        },
+    });
+
+
+    
+    }
+
 
   }
