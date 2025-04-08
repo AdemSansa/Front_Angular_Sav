@@ -88,28 +88,7 @@
                
                 <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
                     <mat-label class="capitalize">{{ 'product' | transloco }}</mat-label>
-                    <mat-select
-                        placeholder="select type"
-                        (selectionChange)="complaint.product= selectValueType.value"
-                        [value]="complaint.product"
-                        [(ngModel)]="complaint.product"
-                        name="type"
-                        #selectValueType
-                        required
-                    >
-                        
-                    
-                        @for (row of displayedList?.data; track row) {
-                        
-                        <mat-option
-                            class="capitalize"
-                            [value]="row._id"
-                            > {{row.name}}</mat-option>
-                            
-                        
-                        }
-                    </mat-select>
-
+                    <input [(ngModel)]="complaint.product" matInput name="product" type="text" required />
                         
                        
                 </mat-form-field>

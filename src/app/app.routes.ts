@@ -6,6 +6,7 @@ import {FeatureCodes} from "./shared/enums/feature-codes";
 import { IsAuthorizedGuard } from 'app/core/auth/guards/isAuthorized.guard';
 import { UserComponent } from './layout/common/user/user.component';
 import { ChartComponent } from 'ng-apexcharts';
+import { ProfileComponent } from './modules/profile/profile.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -13,14 +14,15 @@ import { ChartComponent } from 'ng-apexcharts';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'home/features'},
+    {path: '', pathMatch : 'full', redirectTo: 'home/complaints'},
+
 
     // Redirect signed-in user to the '/example'
     //
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home/features'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home/complaints'},
 
     // Auth routes for guests
     {
@@ -193,6 +195,27 @@ export const appRoutes: Route[] = [
                             feature: FeatureCodes.complaints,
                         },
                         loadChildren: () => import('app/modules/tech/apps/tech/my-work/my-work.route'),
+                    },
+                    {
+                        canActivate: [IsAuthorizedGuard],
+                        canActivateChild: [IsAuthorizedGuard],
+                        path: 'sites',
+                        data: {
+                            breadcrumb: 'Sites',
+                            feature: FeatureCodes.sites,
+                        },
+                        loadChildren: () => import('app/modules/admin/apps/sites/sites.routes'),
+                    }
+                    ,
+                    {
+                        canActivate: [IsAuthorizedGuard],
+                        canActivateChild: [IsAuthorizedGuard],
+                        path:'profile',
+                        data: {
+                            breadcrumb: 'Profile',
+                            feature: FeatureCodes.profile,
+                        },
+                        component:ProfileComponent,
                     }
                 ],
             },

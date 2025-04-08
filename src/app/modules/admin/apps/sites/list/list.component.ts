@@ -13,12 +13,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import {TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../shared/services/loading.service";
-import { ComplaintService } from 'app/shared/services/complaint.service';
-import { Complaint } from 'app/shared/models/complaint';
+
 import { UserService } from 'app/shared/services/user.service';
 import { FeatureCodes } from 'app/shared/enums/feature-codes';
 import { FeatureActions } from 'app/shared/enums/feature-actions';
 import { FeaturesDirective } from 'app/shared/directives/features.directive';
+import { SiteService } from 'app/shared/services/site.service';
+import { Site } from 'app/shared/models/site';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -36,7 +37,6 @@ import { FeaturesDirective } from 'app/shared/directives/features.directive';
         MatMenuItem,
         MatPaginator,
         TranslocoPipe,
-        FeaturesDirective
     ],
 })
 export class ListComponent implements OnInit {
@@ -44,7 +44,9 @@ export class ListComponent implements OnInit {
 //********* INJECT SERVICES ***********//
   featureCodes = FeatureCodes;
   featureActions = FeatureActions;
-  _complaintService= inject(ComplaintService);
+
+  _siteService= inject(SiteService);
+
   _router= inject(Router);
   _fuseConfirmationService= inject(FuseConfirmationService);
   _route= inject(ActivatedRoute);
@@ -53,7 +55,7 @@ export class ListComponent implements OnInit {
   filterOptions: FilterOptions = new FilterOptions();
   currentSize = 10;
   currentPage = 1;
-  displayedList: Pagination<Complaint>;
+  displayedList: Pagination<Site>;
   typingTimer;
   doneTypingInterval = 500;
   isScreenSmall: boolean;
@@ -64,7 +66,6 @@ export class ListComponent implements OnInit {
   filterSearch: string;
 
 
-  _userService = inject(UserService)
   ngOnInit(): void {
     this.getList();
 
@@ -84,7 +85,7 @@ export class ListComponent implements OnInit {
   }
   getList(): void {
     this._loadingService.show();
-    this._complaintService
+    this._siteService
       .getList(
         this.currentSize.toString(),
         this.currentPage.toString(),
@@ -107,10 +108,10 @@ export class ListComponent implements OnInit {
   addOne(): void {
     this._router.navigate(['add'], { relativeTo: this._route }).then();
   }
-  openShow(row: Complaint) {
+  openShow(row: Site) {
     this._router.navigate([`${row._id}`], { relativeTo: this._route }).then();
   }
-  openEdit(row: Complaint) {
+  openEdit(row: Site) {
     this._router.navigate([`${row._id}/edit`], { relativeTo: this._route }).then();
   }
   updateSearch() {
@@ -121,7 +122,7 @@ export class ListComponent implements OnInit {
       this.getList();
     }, this.doneTypingInterval);
   }
-  deleteOne(row: Complaint) {
+  deleteOne(row: Site) {
     // Open the confirmation dialog
     const confirmation = this._fuseConfirmationService.open({
       title: 'Delete',
@@ -140,7 +141,7 @@ export class ListComponent implements OnInit {
     confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === 'confirmed') {
-        this._complaintService.deleteOne(row._id).subscribe(() => {
+        this._siteService.deleteOne(row._id).subscribe(() => {
           this.getList();
         });
       }
@@ -151,20 +152,6 @@ export class ListComponent implements OnInit {
     this.typingTimer = setTimeout(() => {
       this.getList();
     }, this.doneTypingInterval);
-  }
-  openPdf(code:string) {
-    this._complaintService.getDischargePdf(code).subscribe({
-      next: (pdfBlob) => {
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `discharge_${code}.pdf`;
-        a.click();
-      },
-      error: (error) => {
-        console.error('Error downloading PDF:', error);
-      },
-    });
   }
 
 
