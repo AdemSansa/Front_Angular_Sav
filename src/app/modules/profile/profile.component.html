@@ -1,19 +1,21 @@
 <div class="max-w-6xl mx-auto py-10 px-6">
     <div class="bg-white dark:bg-gray-900 shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 p-10">
       
+     <div>
+           
       <!-- Profile Picture Section -->
-      <div class="flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-sm">
+      <div class="flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-sm border-red-500 border-2">
         <img
           src="https://i.pravatar.cc/300"
           alt="Profile"
-          class="w-40 h-40 rounded-full object-cover border-4 border-blue-500 shadow-lg"
+          class="w-40 h-40 rounded-full object-cover border-4 border-red-500 shadow-lg"
         />
         <h2 class="text-2xl font-bold mt-6 text-gray-800 dark:text-white">{{user.name}}</h2>
         <p class="text-lg text-gray-500 dark:text-gray-300 mt-1">{{user.groupsId.label}} Since {{user.createdAt | date:'MMMM yyyy'}} </p>
       </div>
   
       <!-- Profile Info Section -->
-      <div class="lg:col-span-2 space-y-6">
+      <div class="lg:col-span-2 space-y-6  border-red-500">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label class="text-base font-semibold text-gray-600 dark:text-gray-300">Email</label>
@@ -58,6 +60,8 @@
           </button>
         </div>
       </div>
+      
     </div>
+    
   </div>
   
