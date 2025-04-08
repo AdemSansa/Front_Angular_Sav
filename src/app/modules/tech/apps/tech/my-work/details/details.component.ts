@@ -25,7 +25,6 @@ import Swal from 'sweetalert2';
         MatInput,
         ReactiveFormsModule,
         TranslocoPipe,
-        RouterLink
     ],
 })
 export class DetailsComponent implements OnInit {

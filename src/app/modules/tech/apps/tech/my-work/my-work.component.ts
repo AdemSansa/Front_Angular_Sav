@@ -23,7 +23,7 @@ import { TranslocoPipe } from '@ngneat/transloco';
       MatPrefix,
       MatInput,
       FormsModule,
-      MatButton,
+      
       MatIconButton,
       MatMenuTrigger,
       MatMenu,

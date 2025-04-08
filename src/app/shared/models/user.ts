@@ -12,6 +12,10 @@ export class User {
   phone?: string;
   password?: string;
   groupsId?: Group;
+  companyName?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+
 }
 
 export class ResToken {

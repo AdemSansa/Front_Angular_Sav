@@ -19,6 +19,7 @@ export enum FeatureCodes {
   products ='products',
   complaints = 'complaints',
   chats = 'chats',
+  sites = 'sites',
 }
 
 export const listFeatureActions: RefList<FeatureCodes>[] = [
@@ -40,5 +41,6 @@ export const listFeatureActions: RefList<FeatureCodes>[] = [
   { key: FeatureCodes.products, value: 'Products' },
   { key: FeatureCodes.complaints, value: 'Complaints' },
   { key: FeatureCodes.chats, value: 'Chats' },
+  { key: FeatureCodes.sites, value: 'Sites' },
 
 ];

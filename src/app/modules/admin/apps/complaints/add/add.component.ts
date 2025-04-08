@@ -21,6 +21,7 @@ import { jsPDF } from 'jspdf';
 import { MatDialogModule } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import autoTable from 'jspdf-autotable';
+import { SnackBarService } from 'app/shared/services/snack-bar.service';
 
 
 @Component({
@@ -59,6 +60,7 @@ export class AddComponent implements OnInit {
     filterStatus: string[] = [];
     filterSearch: string;
 
+    _snackBarService= inject(SnackBarService);
  
   
     //********* INJECT SERVICES ***********//
@@ -70,6 +72,7 @@ export class AddComponent implements OnInit {
     //********* DECLARE CLASSES/ENUMS ***********//
    complaint = new Complaint();
     products: Product[] = [];
+    dischargePdfUrl: string;
 
     ngOnInit(): void {
         this.getAllProducts();
@@ -103,11 +106,35 @@ export class AddComponent implements OnInit {
 
         console.log(this.complaint);
         
-        this._complaintService.createOne(this.complaint).subscribe((res) => {
+        this._complaintService.createOne(this.complaint).subscribe({
+          next: (result) => {
+            if (result) {
+            this.complaint = result;
+            const code = this.complaint.code;
+            this._complaintService.getDischargePdf(code).subscribe({
+          next: (pdfBlob) => {
+            const url = window.URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `discharge_${code}.pdf`;
+            a.click();
+          },
+          error: (error) => {
+            console.error('Error downloading PDF:', error);
+          },
+        });
 
-          this.complaint = res;
-          this.onSub();
-          this._router.navigate([`../`], { relativeTo: this._route }).then();
+      
+      // Example: Open it in a new tab or offer to print
+
+      // Or store it in a variable to show a "Download PDF" button
+            this._router.navigate([`../`], { relativeTo: this._route }).then();
+            }
+          },
+          error: () => {
+            this._loadingService.hide();
+            this._snackBarService.openSnackBar("Cannot Create Complaint");
+          },
         })
     }
 

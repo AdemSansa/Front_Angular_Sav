@@ -1,18 +1,13 @@
 <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:gap-4 items-center px-4 h-fit md:h-14 border-b bg-gray-900">
-      <div class="w-full text-center md:text-left md:w-1/4 text-4xl font-extrabold text-white">{{ 'Complaints' | transloco }}</div>
+      <div class="w-full text-center md:text-left md:w-1/4 text-4xl font-extrabold text-white">{{ 'Sites' | transloco }}</div>
       <div class="flex w-full md:w-3/4 items-start md:items-center justify-between">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript md:mt-5 w-3/4">
           <mat-icon class="icon-size-5" matPrefix [svgIcon]="'feather:search'"></mat-icon>
           <input matInput [(ngModel)]="filterSearch" (ngModelChange)="updateSearch()" [autocomplete]="'off'" placeholder="{{ 'Search' | transloco }}" />
         </mat-form-field>
-        <ng-container *appFeatures="[
-        {
-          code: featureCodes.complaints,
-          actions: [featureActions.create]
-        }
-      ]">
+        <ng-container>
         
         <button  class="mr-2 text-blue-500 hover:bg-blue-500 hover:text-gray-900 transition-all duration-400" mat-stroked-button (click)="addOne()">
           <span class="mx-1.5 block">{{ 'Add' | transloco }}</span>
@@ -29,10 +24,9 @@
         <div class="row-grid grid z-10 top-0 shadow items-center gap-4 py-2 px-4 md:px-6 text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
           <div class="hidden sm:flex">N°</div>
           <div class="hidden sm:flex">{{ 'Name' | transloco }}</div>
-          <div class="flex">{{ 'Code' | transloco }}</div>
+          <div class="flex">{{ 'Adress' | transloco }}</div>
           <div class="hidden md:flex">{{ 'Phone' | transloco }}</div>
-          <div class="hidden sm:flex">{{ 'Product' | transloco }}</div>
-          <div class="flex">{{ 'Status' | transloco }}</div>
+          <div class="hidden sm:flex">{{ 'Type' | transloco }}</div>
           <div class="flex justify-end">
             <button mat-icon-button (click)="openFilter = true">
               <mat-icon class="icon-size-5" [svgIcon]="'feather:filter'"></mat-icon>
@@ -45,44 +39,24 @@
             <ng-container>
               @for (row of displayedList?.data; track row) {
                 <div
-                  class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
-                  class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
+                  class="row-grid grid z-10 items-center gap-4 py-2 px-4 md:px-6 text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                  [ngClass]="{
+                    'bg-gray-100 dark:bg-gray-800': row.isSelected,
+                    'bg-gray-50 dark:bg-black dark:bg-opacity-5': !row.isSelected
+                  }"
+               
                   [class.bg-red-200]="row.status === 'Under Review'"
                   [class.bg-green-100]="row.status==='Resolved'"
                
                   (click)="isScreenSmall ? openShow(row) : null"
                 >
                   <div class="hidden sm:flex">{{ $index + 1 }}</div>
-                  <div class="hidden sm:flex truncate">{{ row.name }}</div>
-                  <div class="flex truncate">{{ row.code }}</div>
+                  <div class="hidden sm:flex  " [matTooltip]="row.name">{{ row.name }}</div>
+                  <div class="flex truncate">{{ row.address }}</div>
                   <div class="hidden md:flex truncate">{{ row.phone }}</div>
-                  <div class="hidden sm:flex truncate">{{ row.product }}</div>
+                  <div class="hidden sm:flex truncate">{{ row.type }}</div>
             
-                  @if (row.status == 'Submitted') {
-                    <div class="flex truncate">
-                      <span class="text-red-500 font-bold">{{ row.status }}</span>
-                    </div>
-                  }
-                  @if (row.status == 'In Progress') {
-                    <div class="flex truncate">
-                      <span class="text-yellow-500 font-bold">{{ row.status }}</span>
-                    </div>
-                  }
-                  @if (row.status == 'Resolved') {
-                    <div class="flex truncate">
-                      <span class="text-green-500 font-bold">{{ row.status }}</span>
-                    </div>
-                  }
-                  @if (row.status == 'Handeled By Tech') {
-                    <div class="flex truncate">
-                      <span class="text-blue-500 font-bold">{{ row.status }}</span>
-                    </div>
-                  }
-                  @if (row.status == 'Under Review') {
-                    <div class="flex truncate">
-                      <span class="text-red-600 font-bold">{{ row.status }}</span>
-                    </div>
-                  }
+                 
             
                   <div class="flex justify-center">
                     <button mat-icon-button [matMenuTriggerFor]="actionMenu">
@@ -90,41 +64,23 @@
                     </button>
                     <mat-menu #actionMenu="matMenu">
                       <button mat-menu-item (click)="openShow(row)" 
-                       *appFeatures="[{
-                        code: featureCodes.complaints,
-                        actions: [featureActions.read]
-                      }
-                    ]">
+                      >
                         <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
                         <span>{{ 'View' | transloco }}</span>
                       </button>
                       <button mat-menu-item (click)="openEdit(row)" 
-                      *appFeatures="[
-                      {
-                        code: featureCodes.complaints,
-                        actions: [featureActions.update]
-                      }
-                    ]">
+                    >
                         <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                         <span>{{ 'Edit' | transloco }}</span>
                       </button>
 
                     
                       <button mat-menu-item (click)="deleteOne(row)" 
-        *appFeatures="[
-        {
-          code: featureCodes.complaints,
-          actions: [featureActions.delete]
-        }
-      ]">
+       >
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>{{ 'Delete' | transloco }}</span>
                       </button>
-                      <button mat-menu-item (click)="openPdf(row.code)"
-                      >
-                         <mat-icon [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
-                         <span>{{ 'Download PDF' | transloco }}</span>
-                       </button>
+                      
                     </mat-menu>
                   </div>
                 </div>

@@ -54,6 +54,7 @@ addOne(myForm: NgForm): void {
         this._reportService.createOne(this.report).subscribe((res) => {
 
          this.report = res;
+         
           Swal.fire({
             icon: 'success',
             title: 'تمت الإضافة بنجاح',

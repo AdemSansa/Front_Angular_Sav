@@ -43,7 +43,7 @@ export class ComplaintService {
     return this.http.get<Complaint>(`${this.endpoint}/${id}`);
   }
     createOne(complaint: Complaint): Observable<null> {
-    return this.http.post<null>(`${this.endpoint}`, { complaint });
+    return this.http.post<any>(`${this.endpoint}`, { complaint });
   }
   updateOne(complaint: Complaint): Observable<null> {
     return this.http.patch<null>(`${this.endpoint}/${complaint._id}`, { complaint });
@@ -86,6 +86,10 @@ startWorking(id:string): Observable<null> {
   return this.http.post<null>(`${this.endpoint}/requests/my-work/${id}`, {});
 
 }
+getDischargePdf(code:string): Observable<Blob> {
+  return this.http.get(`${this.endpoint}/${code}/pdf`, { responseType: 'blob' });
 }
   
+}
+
 

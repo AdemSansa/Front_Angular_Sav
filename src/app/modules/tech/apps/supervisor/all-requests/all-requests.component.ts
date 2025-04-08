@@ -23,7 +23,6 @@ import { UserService } from 'app/shared/services/user.service';
     MatPrefix,
     MatInput,
     FormsModule,
-    MatButton,
     MatIconButton,
     MatMenuTrigger,
     MatMenu,
@@ -86,11 +85,16 @@ export class AllRequestsComponent {
             next: results => {
                 this.displayedList = results;
                 results.data.forEach((item: Complaint) => {
-                  this._userService.getOne(item.assignedTo).subscribe((user) => {
-                    item.assignedTo = user.name;
-                  })
+                 if(item.assignedTo) {
+                    this._userService.getOne(item.assignedTo).subscribe((user) => {
+                      item.assignedTo = user.name;
+                    })
+                  }
+                 
+                 
+                  
                 })
-                
+              
                 this.openFilter = false;
                 this._loadingService.hide();
             },
