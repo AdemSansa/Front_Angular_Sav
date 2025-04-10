@@ -107,6 +107,75 @@
                         </div>
                       }
                 </div>
+                @if (history) {
+                    <mat-accordion class="mt-6 w-full">
+                      <mat-expansion-panel [expanded]="true" class="rounded-2xl overflow-hidden shadow-xl bg-white">
+                        <mat-expansion-panel-header class="bg-gray-100">
+                          <mat-panel-title class="text-xl font-bold text-gray-800">
+                            {{ 'Complaint History' | transloco }}
+                          </mat-panel-title>
+                          <mat-panel-description class="text-base text-gray-600">
+                            {{ 'All status updates and actions taken' | transloco }}
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                  
+                        @if (history?.length > 0) {
+                          <div class="divide-y divide-gray-200">
+                            @for (row of history; track row) {
+                              <div class="p-6 hover:bg-gray-50 transition-all">
+                                <div class="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+                                  
+                                  <!-- Status -->
+                                  <div class="flex items-center gap-2 w-full sm:w-1/3">
+                                    
+                                    <span 
+                                    class="inline-block px-4 py-1 rounded-full text-2xl font-bold"
+                                    [class.text-red-500]="row.status === 'Under Review'"
+                                    [class.text-yellow-500]="row.status === 'In Progress'"
+                                    [class.text-green-500]="row.status === 'Resolved'"
+                                    [class.text-gray-500]="row.status === 'Submitted'"
+                                    [class.text-orange-500]="row.status === 'Paused'"
+                                
+                                    [class.text-blue-500]="row.status === 'Handeled By Tech'"
+
+                                    [class.bg-red-100]="row.status === 'Under Review'"
+                                    [class.bg-yellow-100]="row.status === 'In Progress'"
+                                    [class.bg-green-100]="row.status === 'Resolved'"
+                                    [class.bg-gray-200]="row.status === 'Submitted'"
+                                    [class.bg-blue-100]="row.status === 'Handeled By Tech'"
+                                    [class.bg-orange-100]="row.status === 'Paused'"
+
+                                    
+                                  >
+                                    {{ row.status }}
+                                  </span>
+                                  </div>
+                  
+                                  <!-- Date -->
+                                  <div class="text-lg font-medium text-gray-700 w-full sm:w-1/3">
+                                    <i class="fas fa-calendar-alt mr-1 text-gray-500"></i>
+                                    {{ row.date | date: 'medium' }}
+                                  </div>
+                  
+                                  <!-- Description -->
+                                  <div class="text-xl text-gray-600 w-full sm:w-1/3">
+                                    <i class="fas fa-info-circle mr-1 text-gray-400"></i>
+                                    {{ row.description || 'No additional details.' }}
+                                  </div>
+                  
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        } @else {
+                          <div class="p-6 text-base text-gray-500 text-center">
+                            {{ 'No history available for this complaint.' | transloco }}
+                          </div>
+                        }
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  }
+                  
             </div>
         </form>
     </div>

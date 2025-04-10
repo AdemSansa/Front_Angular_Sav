@@ -16,6 +16,7 @@ import {LoadingService} from "../../../../../shared/services/loading.service";
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
 import { UserService } from 'app/shared/services/user.service';
+import { HistoryService } from 'app/shared/services/history.service';
 @Component({
   selector: 'app-all-requests',
   imports: [  MatFormField,
@@ -37,6 +38,7 @@ export class AllRequestsComponent {
   
   //********* INJECT SERVICES ***********//
   _userService = inject(UserService)
+  _historyService = inject(HistoryService)
     _complaintService= inject(ComplaintService);
     _router= inject(Router);
     _fuseConfirmationService= inject(FuseConfirmationService);
@@ -95,6 +97,7 @@ export class AllRequestsComponent {
                   
                 })
               
+                
                 this.openFilter = false;
                 this._loadingService.hide();
             },

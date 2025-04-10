@@ -71,6 +71,11 @@
                     <span class="text-green-500 font-bold">{{ row.status }}</span>
                   </div>
                 }
+                @if (row.status == 'Paused') {
+                  <div class="flex truncate">
+                    <span class="text-gray-500 font-bold">{{ row.status }}</span>
+                  </div>
+                }
                 @if (row.assignedTo) {
                     <div class="hidden sm:flex items-center px-2 py-1 text-sm font-medium text-green-700 bg-green-200 rounded-lg">
                         {{ row.assignedTo }}

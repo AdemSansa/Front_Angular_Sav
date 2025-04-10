@@ -1,103 +1,116 @@
 @if (complaint) {
-    <div
-        class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
-    >
-        <form class="w-full" #myForm="ngForm" ngForm="ngForm">
-            <!-- Header -->
-            <div class="flex flex-row md:gap-4 items-center px-4 h-fit md:h-14  border-b bg-gray-900">
-                <div class="flex gap-2 w-1/4 text-4xl font-extrabold text-white">
-                    <span>{{ 'Details' | transloco }}</span>
-                    <span class="hidden sm:flex">{{ 'Request' | transloco }}</span>
-                </div>
-              
+    <div class="sm:absolute sm:inset-0 flex flex-col min-w-0 bg-gray-100 dark:bg-gray-900">
+        <form class="w-full h-full" #myForm="ngForm" ngForm="ngForm">
+    
+            <!-- HEADER -->
+            <div class="flex items-center px-6 py-4 border-b bg-gray-800 shadow text-white">
+                <h1 class="text-2xl font-bold">
+                    {{ 'Details' | transloco }}
+                    <span class="hidden sm:inline"> - {{ 'Request' | transloco }}</span>
+                </h1>
             </div>
-            <!-- Main -->
-            <div class="flex flex-col flex-auto h-[calc(100vh-8rem)] bg-gray-100 overflow-y-auto">
-                <div class="flex flex-col mb-6 w-full">
-                    <div class="grid sm:grid-cols-9 gap-6 p-3">
-                        <!-- Code -->
-                        <div class="sm:col-span-3">
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label class="capitalize">{{ 'Code' | transloco }}</mat-label>
-                                <input [(ngModel)]="complaint.code" matInput name="code" type="text" readonly />
-                            </mat-form-field>
-                        </div>
-                        <!-- Name -->
-                        <div class="sm:col-span-3">
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label class="capitalize">{{ 'Name' | transloco }}</mat-label>
-                                <input [(ngModel)]="complaint.name" matInput name="name" type="text" readonly />
-                            </mat-form-field>
-                        </div>
-                        <!-- Phone -->
-                        <div class="sm:col-span-3">
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label class="capitalize">{{ 'Phone' | transloco }}</mat-label>
-                                <input [(ngModel)]="complaint.phone" matInput name="phone" type="text" readonly />
-                            </mat-form-field>
-                        </div>
-                        <!-- Description -->
-                        <div class="sm:col-span-9">
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label class="capitalize">{{ 'Description' | transloco }}</mat-label>
-                                <textarea [(ngModel)]="complaint.description" matInput name="description" readonly></textarea>
-                            </mat-form-field>
-                        </div>
-                        <!-- Status -->
-                        <div class="sm:col-span-3">
-                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                                <mat-label class="capitalize">{{ 'Status' | transloco }}</mat-label>
-                                <input [(ngModel)]="complaint.status" matInput name="status" type="text" readonly />
-                            </mat-form-field>
-                        </div>
-                    
-                        <!-- Assign Button TO to tech-->
-                      
-                            <div class="sm:col-span-3 flex ml-20 flex-wrap justify-center gap-4">
-                                <!-- Start Working Button -->
-                                <button 
-                                    mat-raised-button 
-                                    color="primary" 
-                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
-                                    [disabled]="complaint.status !== 'Paused'"
-                                    (click)="StartWorking()">
-                                    {{ 'Start Working' | transloco }}
-                                </button>
-
-                                <!-- Pause button-->
-                                <button 
-                                    mat-raised-button 
-                                    color="primary" 
-                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
-                                    [disabled]="complaint.status !== 'In Progress'"
-                                    (click)="PauseWorking()">
-                                    {{ 'Pause Working' | transloco }}
-                                </button>
-
-                                <!-- Finish Working Button -->
-                                <button 
-                                    mat-raised-button 
-                                    color="primary" 
-                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out"
-                                    [disabled]="complaint.status !== 'In Progress'"
-                                    (click)="FinishWorking()">
-                                    {{ 'Finish Working' | transloco }}
-                                </button>
-
-                            
-                                <!-- Request Return Button -->
-                                <button 
-                                    mat-raised-button 
-                                    color="warn" 
-                                    (click)="requestReturn()"
-                                    class="px-6 py-2 text-white font-semibold shadow-md transition-all duration-300 ease-in-out">
-                                    {{ 'Request a return to the Supervisor' | transloco }}
-                                </button>
-                            </div>
-                                                 
+    
+            <!-- 3-COLUMN MAIN CONTENT -->
+            <div class="flex flex-row flex-grow gap-4 p-4 overflow-hidden">
+    
+                <!-- COLUMN 1: PRODUCT INFO -->
+                <section class="flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col overflow-y-auto">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-white mb-4 border-b pb-2">
+                        {{ 'Product Info' | transloco }}
+                    </h2>
+    
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>{{ 'Code' | transloco }}</mat-label>
+                        <input matInput [(ngModel)]="complaint.code" name="code" readonly />
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>{{ 'Name' | transloco }}</mat-label>
+                        <input matInput [(ngModel)]="complaint.name" name="name" readonly />
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>{{ 'Phone' | transloco }}</mat-label>
+                        <input matInput [(ngModel)]="complaint.phone" name="phone" readonly />
+                    </mat-form-field>
+                </section>
+    
+                <!-- COLUMN 2: PROBLEM DESCRIPTION -->
+                <section class="flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col overflow-y-auto">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-white mb-4 border-b pb-2">
+                        {{ 'Problem Description' | transloco }}
+                    </h2>
+    
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>{{ 'Description' | transloco }}</mat-label>
+                        <textarea matInput [(ngModel)]="complaint.description" name="description" rows="8" readonly></textarea>
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>{{ 'Status' | transloco }}</mat-label>
+                        <input matInput [(ngModel)]="complaint.status" name="status" readonly />
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>{{ 'Creation Date' | transloco }}</mat-label>
+                        <input matInput [value]="complaint.createdAt |date :'dd MMMM yyyy'" name="createdAt" readonly />
+                    </mat-form-field>
+                </section>
+    
+                <!-- COLUMN 3: TECHNICIAN & ACTIONS -->
+                <section class="flex-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col overflow-y-auto">
+                    <h2 class="text-xl font-semibold text-gray-700 dark:text-white mb-4 border-b pb-2">
+                        {{ 'Technician' | transloco }}
+                    </h2>
+    
+                    <div class="space-y-2 text-gray-800 dark:text-gray-300 text-sm mb-6">
+                        @if( complaint.technicianName){
+                        <p >
+                            <strong>{{ 'Assigned Technician' | transloco }}:</strong> {{ complaint.technicianName }}
+                        </p>
+                        <p >
+                            <strong>{{ 'Assigned on' | transloco }}:</strong>                         </p>
+                    }
                     </div>
-                </div>
+    
+                    <div class="flex flex-col gap-3 mt-auto">
+                        <button 
+                            mat-raised-button 
+                            color="primary"
+                            class="w-full"
+                            [disabled]="complaint.status !== 'Paused' && complaint.status !== 'Handeled By Tech'"
+                            (click)="StartWorking()">
+                            {{ 'Start Working' | transloco }}
+                        </button>
+    
+                        <button 
+                            mat-raised-button 
+                            color="accent"
+                            class="w-full"
+                            [disabled]="complaint.status !== 'In Progress'"
+                            (click)="PauseWorking()">
+                            {{ 'Pause Working' | transloco }}
+                        </button>
+    
+                        <button 
+                            mat-raised-button 
+                            color="primary"
+                            class="w-full"
+                            [disabled]="complaint.status !== 'In Progress'"
+                            (click)="FinishWorking()">
+                            {{ 'Finish Working' | transloco }}
+                        </button>
+    
+                        <button 
+                            mat-raised-button 
+                            color="warn"
+                            class="w-full"
+                            (click)="requestReturn()">
+                            {{ 'Request a return to the Supervisor' | transloco }}
+                        </button>
+                    </div>
+                </section>
             </div>
         </form>
     </div>
-}
+    }
+    

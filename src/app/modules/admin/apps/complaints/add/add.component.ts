@@ -22,6 +22,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import autoTable from 'jspdf-autotable';
 import { SnackBarService } from 'app/shared/services/snack-bar.service';
+import { HistoryService } from 'app/shared/services/history.service';
+import { History } from 'app/shared/models/history';
 
 
 @Component({
@@ -59,10 +61,12 @@ export class AddComponent implements OnInit {
     filterType: string[] = [];
     filterStatus: string[] = [];
     filterSearch: string;
+    _historyService = inject(HistoryService);
 
     _snackBarService= inject(SnackBarService);
  
   
+    history = new History();
     //********* INJECT SERVICES ***********//
    _complaintService= inject(ComplaintService);
     _router= inject(Router);
@@ -111,6 +115,15 @@ export class AddComponent implements OnInit {
             if (result) {
             this.complaint = result;
             const code = this.complaint.code;
+            this.history.complaintId = this.complaint._id;
+            this.history.status = this.complaint.status;
+            this.history.description = "Request Submitted";
+            this.history.date = new Date();
+            this._historyService.createOne(this.history).subscribe();
+            
+
+           
+
             this._complaintService.getDischargePdf(code).subscribe({
           next: (pdfBlob) => {
             const url = window.URL.createObjectURL(pdfBlob);
