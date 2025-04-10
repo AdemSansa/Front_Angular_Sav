@@ -11,6 +11,10 @@ import {forkJoin} from "rxjs";
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
 import Swal from 'sweetalert2';
+import { UserService } from 'app/shared/services/user.service';
+import { DatePipe } from '@angular/common';
+import { HistoryService } from 'app/shared/services/history.service';
+import { History } from 'app/shared/models/history';
 
  @Component({
     selector: 'app-details',
@@ -25,6 +29,7 @@ import Swal from 'sweetalert2';
         MatInput,
         ReactiveFormsModule,
         TranslocoPipe,
+        DatePipe,
     ],
 })
 export class DetailsComponent implements OnInit {
@@ -37,6 +42,9 @@ export class DetailsComponent implements OnInit {
     //********* DECLARE CLASSES/ENUMS ***********//
     id = this._route.snapshot.paramMap.get('id') || undefined;
     complaint = new Complaint();
+    _userService = inject(UserService)
+    history:History = new History()
+    _historyService = inject(HistoryService)
     ngOnInit(): void {
         if (this.id) {
             this._loadingService.show()
@@ -45,6 +53,16 @@ export class DetailsComponent implements OnInit {
             ]).subscribe({
                 next: (result:[Complaint ]) => {
                     this.complaint = result[0];
+                    console.log(this.complaint);
+                    this._userService.getOne(this.complaint.assignedTo).subscribe({
+                        next: (result) => {
+                            this.complaint.technicianName= result.name;
+                        },
+                        error: () => {
+                            this._loadingService.hide()
+                        }
+                    })
+                    
                     this._loadingService.hide()
                 },
                 error: () => {
@@ -56,7 +74,8 @@ export class DetailsComponent implements OnInit {
 
     StartWorking() {
         this._loadingService.show()
-        this._complaintService.startWorking(this.id).subscribe({
+        this.complaint.status = 'In Progress';
+        this._complaintService.updateOne(this.complaint).subscribe({
             next: () => {
                 this._loadingService.hide()
                 Swal.fire({
@@ -65,7 +84,20 @@ export class DetailsComponent implements OnInit {
                     text: 'You have started working on the complaint!',
                     confirmButtonText: 'OK',
                 });
-                //refresh 
+                this.history.complaintId = this._route.snapshot.paramMap.get('id') || undefined;
+                this.history.status = this.complaint.status;
+                this.history.description = 'Started working on the complaint';
+                this.history.date = new Date();
+                
+                this._historyService.createOne(this.history).subscribe({
+                    next: () => {
+                        this._loadingService.hide()
+                    },
+                    error: () => {
+                        this._loadingService.hide()
+                    }
+                })
+
 
 
                 this._router.navigate(['/home/my-work']);
@@ -89,6 +121,18 @@ export class DetailsComponent implements OnInit {
                 });
                 //refresh 
 
+                this.history.complaintId = this._route.snapshot.paramMap.get('id') || undefined;
+                this.history.status = this.complaint.status;
+                this.history.description = 'Paused working on the complaint';
+                this.history.date = new Date();
+                this._historyService.createOne(this.history).subscribe({
+                    next: () => {
+                        this._loadingService.hide()
+                    },
+                    error: () => {
+                        this._loadingService.hide()
+                    }
+                })
                 this._router.navigate(['/home/my-work']);
             },
             error: () => {
@@ -109,6 +153,18 @@ export class DetailsComponent implements OnInit {
                     confirmButtonText: 'OK',
                 });
                 //refresh 
+                this.history.complaintId = this._route.snapshot.paramMap.get('id') || undefined;
+                this.history.status = this.complaint.status;
+                this.history.description = 'Finished working on the complaint and resolved it';
+                this.history.date = new Date();
+                this._historyService.createOne(this.history).subscribe({
+                    next: () => {
+                        this._loadingService.hide()
+                    },
+                    error: () => {
+                        this._loadingService.hide()
+                    }
+                })
 
                 this._router.navigate(['/home/my-work']);
             },

@@ -16,6 +16,8 @@ import { ReportService } from 'app/shared/services/report.service';
 import { Report } from 'app/shared/models/report';
 import { DatePipe } from '@angular/common';
 import { UserService } from 'app/shared/services/user.service';
+import { HistoryService } from 'app/shared/services/history.service';
+import {MatExpansionModule,MatAccordion} from "@angular/material/expansion";
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -29,12 +31,22 @@ import { UserService } from 'app/shared/services/user.service';
         MatInput,
         ReactiveFormsModule,
         TranslocoPipe,
-        DatePipe
+        DatePipe,
+        MatExpansionModule,
+        MatAccordion,
     ],
 })
 export class DetailsComponent implements OnInit {
     //********* INJECT SERVICES ***********//
+    openFilter = false;
+    filterType: string[] = [];
+    filterStatus: string[] = [];
+    filterSearch: string;
+    currentSize = 10;
+    currentPage = 1;
     _complaintService= inject(ComplaintService);
+    _historyService= inject(HistoryService);
+    history:any[] = [];
     _reportService= inject(ReportService);
     _router= inject(Router);
     _route= inject(ActivatedRoute);
@@ -61,6 +73,7 @@ export class DetailsComponent implements OnInit {
             });
         }
         this.getReport();
+        this.getHistory();
     }
     updateOne() {
         this._router.navigate([`/home/companies/${this.complaint._id}/edit`]).then();
@@ -109,7 +122,6 @@ export class DetailsComponent implements OnInit {
             });
             }   );
         
-        console.log(this.report);
         
       },
         error: (err) => {
@@ -119,6 +131,29 @@ export class DetailsComponent implements OnInit {
 
 
     
+    
+    }
+    getHistory() {
+        this._historyService.getList(
+            this.currentSize.toString(),
+            this.currentPage.toString(),
+            this.filterSearch,
+            this.filterType.toString(),
+            this.filterStatus.toString(),
+            this.id,
+        ).subscribe({
+            next: results => {
+                this.history = results.data;
+                this.openFilter = false;
+                console.log(this.history);
+                
+                this._loadingService.hide();
+            },
+            error: () => {
+                this._loadingService.hide();
+                this.openFilter = false;
+            }
+        });
     }
 
 

@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 import { AssignTechnicianDialogComponent } from 'app/shared/components/assign-technician-dialog/assign-technician-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from 'app/shared/services/user.service';
+import { HistoryService } from 'app/shared/services/history.service';
+import { History } from 'app/shared/models/history';
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -34,6 +36,9 @@ export class DetailsComponent implements OnInit {
     //********* INJECT SERVICES ***********//
     _complaintService= inject(ComplaintService);
     _router= inject(Router);
+      _historyService = inject(HistoryService)
+      history = new History()
+    
     _route= inject(ActivatedRoute);
     _fuseConfirmationService= inject(FuseConfirmationService);
     _loadingService= inject(LoadingService);
@@ -95,6 +100,7 @@ export class DetailsComponent implements OnInit {
                     confirmButtonText: 'OK',
                 });
                 this._loadingService.hide()
+             
             },
             error: () => {
                 Swal.fire({

@@ -83,6 +83,11 @@
                       <span class="text-red-600 font-bold">{{ row.status }}</span>
                     </div>
                   }
+                  @if (row.status == "Paused") {
+                    <div class="flex truncate">
+                      <span class="text-orange-500 font-bold">{{ row.status }}</span>
+                    </div>
+                  }
             
                   <div class="flex justify-center">
                     <button mat-icon-button [matMenuTriggerFor]="actionMenu">

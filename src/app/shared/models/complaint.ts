@@ -5,6 +5,8 @@ export class Complaint {
   phone?: string;
   product?: string;
   description?: string;
+  technicianName?: string;
+  
   code?: string;
   status?: string;
   assignedTo?: string;
