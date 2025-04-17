@@ -16,6 +16,11 @@ import {Group} from "../../../../../shared/models/group";
 import {listFeatureType} from "../../../../../shared/enums/featureType";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
+import { SiteService } from 'app/shared/services/site.service';
+import { FilterOptions } from 'app/shared/models/filter-options';
+import { Pagination } from 'app/shared/models/pagination';
+import { limits } from 'chroma-js';
+import { Site } from 'app/shared/models/site';
 
 @Component({
   selector: 'app-details',
@@ -43,11 +48,26 @@ export class AddComponent implements OnInit{
     _fuseConfirmationService= inject(FuseConfirmationService);
     _route= inject(ActivatedRoute);
     _loadingService = inject(LoadingService)
+    siteService = inject(SiteService);
     //********* DECLARE CLASSES/ENUMS ***********//
     user = new User();
     listGroups: Group[] = [];
 
+     filterOptions: FilterOptions = new FilterOptions();
+      currentSize = 10;
+      currentPage = 1;
+      displayedList: Pagination<Site>;
+      typingTimer;
+      doneTypingInterval = 500;
+      isScreenSmall: boolean;
+      //************* FILTERS *****************//
+      openFilter = false;
+      filterType: string[] = [];
+      filterStatus: string[] = [];
+      filterSearch: string;
+
     ngOnInit(): void {
+      this.getSites();
         this._loadingService.show();
         forkJoin([
             this._groupService.getAll()
@@ -121,6 +141,24 @@ export class AddComponent implements OnInit{
       });
     }
   }
-
+  getSites() {
+    this.siteService.getList(
+      this.currentSize.toString(),
+      this.currentPage.toString(),
+      this.filterSearch,
+      this.filterType.toString(),
+      this.filterStatus.toString(),
+    ).subscribe({
+      next: results => {
+        this.displayedList = results;
+        this.openFilter = false;
+        this._loadingService.hide();
+      },
+      error: () => {
+        this._loadingService.hide();
+        this.openFilter = false;
+      }
+    });
+  }
     protected readonly listFeatureType = listFeatureType;
 }

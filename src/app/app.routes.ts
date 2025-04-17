@@ -14,7 +14,7 @@ import { ProfileComponent } from './modules/profile/profile.component';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'home/complaints'},
+    {path: '', pathMatch : 'full', redirectTo: 'home/profile'},
 
 
     // Redirect signed-in user to the '/example'
@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home/complaints'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home/profile'},
 
     // Auth routes for guests
     {
@@ -215,8 +215,7 @@ export const appRoutes: Route[] = [
                             breadcrumb: 'Profile',
                             feature: FeatureCodes.profile,
                         },
-                        component:ProfileComponent,
-                    }
+                        loadChildren: () => import('app/modules/profile/profile.routes'),}
                 ],
             },
         ],

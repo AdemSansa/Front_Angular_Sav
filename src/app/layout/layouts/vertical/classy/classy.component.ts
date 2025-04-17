@@ -24,6 +24,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     user: User;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     isLoading: boolean = true;
+    userInfo: any;
 
     /**
      * Constructor
@@ -49,6 +50,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+       
+ 
+        
         this.menuService.getMenu().subscribe({
             next: (data) => {
                 this.navigation = data.menu;

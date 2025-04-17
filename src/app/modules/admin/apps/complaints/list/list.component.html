@@ -13,7 +13,9 @@
           actions: [featureActions.create]
         }
       ]">
-        
+        <button mat-icon-button (click)="openFilter = true">
+          <mat-icon class="icon-size-5" [svgIcon]="'feather:filter'"></mat-icon>
+        </button>
         <button  class="mr-2 text-blue-500 hover:bg-blue-500 hover:text-gray-900 transition-all duration-400" mat-stroked-button (click)="addOne()">
           <span class="mx-1.5 block">{{ 'Add' | transloco }}</span>
         </button>
@@ -43,7 +45,7 @@
           <div class="flex-1 sm:grid sm:flex-0">
             <!-- Rows -->
             <ng-container>
-              @for (row of displayedList?.data; track row) {
+              @for (row of displayedList?.data; track row._id) {
                 <div
                   class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
                   class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"
@@ -140,7 +142,51 @@
         </div>
         <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent" [showFirstLastButtons]="true" (page)="pageChanged($event)" [length]="displayedList?.total" [pageSize]="currentSize" [pageSizeOptions]="[5, 10, 20, 50, 100]"></mat-paginator>
         }
+        @if (displayedList?.data?.length == 0) {
+          <div class="flex flex-col items-center justify-center w-full h-full">
+            <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle' " class="icon-size-20 text-gray-500"></mat-icon>
+            <p class="text-6xl text-gray-500">{{ 'No data available' | transloco }}</p>
+          </div>
+        }
+
       </div>
+      <div class="h-[calc(100vh-11rem)] md:h-[calc(100vh-7.5rem)] absolute top-28 md:top-14 right-0 flex flex-col justify-start items-center  z-99 bg-gray-400 transition-all duration-500" [class.w-full]="openFilter" [class.w-0]="!openFilter">
+        @if(openFilter)   {
+            <div class="text-white text-2xl font-bold uppercase flex items-center py-2 gap-2">
+   
+                <button mat-stroked-button (click)="getList()" >
+                    <span>Activate filters</span>
+                </button>
+                <button mat-icon-button (click)="openFilter = false" >
+                   <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                </button>
+            </div>
+            <div class="w-full grid sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+               <div class="border  w-full rounded-md p-2">
+                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                       <mat-label class="capitalize">{{ 'select a type' | transloco }}</mat-label>
+                       <mat-select
+                           placeholder="select type"
+                           [(ngModel)]="filterStatus"
+                           name="filterType"
+                           multiple
+                       >
+                           @for (item of listComplaintsStatus; track item) {
+                               <mat-option [value]="item.key">
+                                   <div class="font-medium items-center flex flex-row">
+                                                           <span class="">
+                                                             {{ item.value }}
+                                                           </span>
+                                   </div>
+                               </mat-option>
+                           }
+                       </mat-select>
+                   </mat-form-field>
+               </div>
+              
+   
+            </div>
+        }
     </div>
   </div>
   

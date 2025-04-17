@@ -80,13 +80,12 @@ export class UserService {
   changePassword(
     password: string,
     newPassword: string,
-    code: string,
     id: string,
   ): Observable<null> {
     return this.http.post<null>(`${this.endpointAuth}/${id}/change-password`, {
       password,
       newPassword,
-      code,
+   
     });
   }
   checkPassword(password: string): Observable<null> {
@@ -203,6 +202,12 @@ export class UserService {
     return this.http.get<User[]>(`${this.endpointAuth}/group/67ec5dee6f757a0f46501b82`);
 
 
+  }
+  selectAvatar(avatar: string): Observable<User> {
+
+    return this.http.post<User>(`${this.endpointAuth}/select-avatar`, { avatar });
+
+  
+  }
  
-}
 }
