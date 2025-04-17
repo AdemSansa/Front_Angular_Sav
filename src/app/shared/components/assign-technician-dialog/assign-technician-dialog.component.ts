@@ -3,10 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialogActions } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-assign-technician-dialog',
-  imports: [MatFormFieldModule,MatDialogModule,MatSelectModule,FormsModule],
+  imports: [MatFormFieldModule,MatDialogModule,MatSelectModule,FormsModule ,MatDialogActions, MatButton, MatLabel],
   templateUrl: './assign-technician-dialog.component.html',
   styleUrl: './assign-technician-dialog.component.scss'
 })

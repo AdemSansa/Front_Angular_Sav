@@ -1,8 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { User } from 'app/shared/models/user';
 import { CompanyService } from 'app/shared/services/company.service';
 import { UserService } from 'app/shared/services/user.service';
+import { Router } from '@angular/router';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 @Component({
   selector: 'app-profile',
@@ -13,12 +16,15 @@ import { UserService } from 'app/shared/services/user.service';
 export class ProfileComponent implements OnInit {
 
   _userService = inject(UserService);
+  _router = inject(Router);
+  _activatedRoute = inject(ActivatedRoute);
 
   _companyService = inject(CompanyService);
   user:User = new User();
 
 
   ngOnInit(): void {
+    this.avatarList = Array.from({ length: 8 }, (_, i) => `assets/images/avatars/avatar${i + 1}.png`);
 
     this._userService.getUserProfile().subscribe({
       next: (result: User) => {
@@ -44,4 +50,28 @@ export class ProfileComponent implements OnInit {
   
 
 }
+
+goToChangePassword() {
+  this._router.navigate(['change-password'], { relativeTo: this._activatedRoute });
 }
+avatarList: string[] = [];
+showAvatarPicker = false;
+
+
+selectAvatar(avatar: string) {
+  this.user.avatar = avatar;
+  this.showAvatarPicker = false;
+
+  // Optional: Save to backend
+  this.saveAvatar(avatar);
+}
+
+saveAvatar(avatar: string) {
+  // Call your backend API to update user's avatar
+  this._userService.selectAvatar( avatar).subscribe({
+    next: () => console.log('Avatar updated'),
+    error: (err) => console.error(err)
+  });
+}
+}
+

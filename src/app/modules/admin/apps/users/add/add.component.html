@@ -96,6 +96,36 @@
             </mat-error>
             }
           </div>
+          <!-- Site-->
+          <div class="sm:col-span-3">
+            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                <mat-label class="capitalize">{{ 'Site' | transloco }}</mat-label>
+                <mat-select
+                    placeholder="select Site"
+                    [(ngModel)]="user.site"
+                    name="Si"
+                    required
+                >
+                    @for (item of displayedList.data; track item) {
+                        <mat-option [value]="item">
+                            <div class="font-medium items-center flex flex-row">
+                                                      <span class="">
+                                                        {{ item.name }}
+                                                      </span>
+                            </div>
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+          @if ( myForm.controls['site'] && (myForm.controls['site'].dirty || myForm.submitted)
+          && myForm.controls['site'].hasError('required') ) {
+          <mat-error>
+            {{ 'This field is required' | transloco }}
+          </mat-error>
+          }
+        </div>
+
         </div>
       </div>
     </div>

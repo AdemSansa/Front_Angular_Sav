@@ -6,17 +6,19 @@ import { FilterOptions } from '../../../../../shared/models/filter-options';
 import { Pagination } from '../../../../../shared/models/pagination';
 import { FuseConfirmationService } from '../../../../../../@fuse/services/confirmation';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButton, MatButtonModule, MatIconButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInput} from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import {TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../shared/services/loading.service";
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
 import { UserService } from 'app/shared/services/user.service';
 import { HistoryService } from 'app/shared/services/history.service';
+import { MatOption, MatSelectModule } from '@angular/material/select';
+import { listRequestsAssign } from 'app/shared/enums/requestsAssign';
 @Component({
   selector: 'app-all-requests',
   imports: [  MatFormField,
@@ -29,7 +31,12 @@ import { HistoryService } from 'app/shared/services/history.service';
     MatMenu,
     MatMenuItem,
     MatPaginator,
-    TranslocoPipe,],
+    TranslocoPipe,
+  MatLabel,
+MatSelectModule,
+MatButtonModule,
+MatOption
+],
   templateUrl: './all-requests.component.html',
   styleUrl: './all-requests.component.scss'
 })
@@ -57,6 +64,7 @@ export class AllRequestsComponent {
     filterType: string[] = [];
     filterStatus: string[] = [];
     filterSearch: string;
+    readonly listRequestStatus = listRequestsAssign;
   
     ngOnInit(): void {
       this.getList();

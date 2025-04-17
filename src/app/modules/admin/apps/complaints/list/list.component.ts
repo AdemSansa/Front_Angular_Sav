@@ -10,7 +10,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInput} from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import {TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../shared/services/loading.service";
 import { ComplaintService } from 'app/shared/services/complaint.service';
@@ -19,6 +19,9 @@ import { UserService } from 'app/shared/services/user.service';
 import { FeatureCodes } from 'app/shared/enums/feature-codes';
 import { FeatureActions } from 'app/shared/enums/feature-actions';
 import { FeaturesDirective } from 'app/shared/directives/features.directive';
+import { listComplaintsStatus } from 'app/shared/enums/complaintsStatus';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -36,7 +39,12 @@ import { FeaturesDirective } from 'app/shared/directives/features.directive';
         MatMenuItem,
         MatPaginator,
         TranslocoPipe,
-        FeaturesDirective
+        FeaturesDirective,
+        MatLabel,
+        MatSelectModule,
+        MatOptionModule,
+        
+
     ],
 })
 export class ListComponent implements OnInit {
@@ -57,6 +65,7 @@ export class ListComponent implements OnInit {
   typingTimer;
   doneTypingInterval = 500;
   isScreenSmall: boolean;
+  protected readonly listComplaintsStatus = listComplaintsStatus;
   //************* FILTERS *****************//
   openFilter = false;
   filterType: string[] = [];
@@ -84,6 +93,9 @@ export class ListComponent implements OnInit {
   }
   getList(): void {
     this._loadingService.show();
+    console.log( this.filterStatus);
+
+    
     this._complaintService
       .getList(
         this.currentSize.toString(),
