@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, input, OnInit, ViewChild} from '@angular/core';
 import { NgForm, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { fuseAnimations } from '../../../../../../@fuse/animations';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { FuseConfirmationService } from '../../../../../../@fuse/services/confir
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
-import {TranslocoPipe} from "@ngneat/transloco";
+import {getValue, TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../shared/services/loading.service";
 import { SiteService } from 'app/shared/services/site.service';
 import { Site } from 'app/shared/models/site';
@@ -21,6 +21,11 @@ import { Pagination } from 'app/shared/models/pagination';
 import { Company } from 'app/shared/models/company';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSelectChange } from '@angular/material/select';
+import 'mapbox-gl/dist/mapbox-gl.css'; // ✅ important!
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+
+import mapboxgl from 'mapbox-gl';
+import { size, values } from 'lodash';
 @Component({
   selector: 'app-details',
   templateUrl: './add.component.html',
@@ -66,6 +71,12 @@ export class AddComponent implements OnInit {
       filterStatus: string[] = [];
       filterSearch: string;
       displayedList: Pagination<Company>;
+      map!: mapboxgl.Map;
+      marker!: mapboxgl.Marker;
+      
+      mapboxToken: string = 'pk.eyJ1IjoieW9zcmEtbmFqYXIiLCJhIjoiY2xmdGw2a20wMDF4eTNxcDBiMHZycnZpdCJ9.PTo1tyEyJry6uEKaqRLkRQ'; // 👈 Put your real Mapbox token here
+      lat: number = 36.8065;
+      lng: number = 10.1815;
     
 
     ngOnInit(): void {
@@ -73,10 +84,7 @@ export class AddComponent implements OnInit {
         this.getCompanies();
     }
 
-    lat: number = 36.8065; // Default latitude (e.g., Tunis)
-  lng: number = 10.1815; // Default longitude
-  map: any;
-  marker: any;
+
     site = new Site();
 
 
@@ -165,27 +173,66 @@ export class AddComponent implements OnInit {
       });
     }
   }
+  
+  
   initMap(): void {
-    this.map = L.map('map').setView([this.lat, this.lng], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    this.marker = L.marker([this.lat, this.lng], { draggable: true }).addTo(this.map);
-
-    this.marker.on('dragend', (e: any) => {
-      const position = e.target.getLatLng();
-      this.lat = position.lat;
-      this.lng = position.lng;
+    mapboxgl.accessToken = this.mapboxToken;
+  
+    this.map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [this.lng, this.lat],
+      zoom: 13,
     });
+  
+    this.map.addControl(new mapboxgl.NavigationControl());
+  
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+  
+      placeholder: 'Search for address in Tunisia',
+      zoom: 15,
+  
+    
+      countries: 'TN',
+      //get the input from the input field
 
-    this.map.on('click', (e: any) => {
-      const { lat, lng } = e.latlng;
-      this.lat = lat;
-      this.lng = lng;
-      this.marker.setLatLng([lat, lng]);
+
+
+      marker: false // we'll use our custom marker
+    });
+  
+this.map.addControl(geocoder, 'top-left');
+  
+    // when a result is selected from the geocoder
+    geocoder.on('result', (event) => {
+      const coords = event.result.geometry.coordinates;
+      this.lng = coords[0];
+      this.lat = coords[1];
+      this.map.flyTo({ center: coords, zoom: 15 });
+      this.marker.setLngLat(coords);
+      this.site.address = event.result.place_name;
+
+    });
+  
+    this.map.on('load', () => {
+      this.marker = new mapboxgl.Marker({ draggable: true })
+        .setLngLat([this.lng, this.lat])
+        .addTo(this.map);
+  
+      this.marker.on('dragend', () => {
+        const lngLat = this.marker.getLngLat();
+        this.lat = lngLat.lat;
+        this.lng = lngLat.lng;
+      });
+  
+      this.map.on('click', (e) => {
+        const { lng, lat } = e.lngLat;
+        this.lat = lat;
+        this.lng = lng;
+        this.marker.setLngLat([lng, lat]);
+      });
     });
   }
-
 }

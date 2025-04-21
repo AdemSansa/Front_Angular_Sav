@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
+import { environment } from 'environments/environment';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -8,7 +9,7 @@ export class QuickChatService
 {
     private _chat: BehaviorSubject<Chat> = new BehaviorSubject(null);
     private _chats: BehaviorSubject<Chat[]> = new BehaviorSubject<Chat[]>(null);
-
+    private api = `${environment.api}/chats`;
     /**
      * Constructor
      */
@@ -45,7 +46,7 @@ export class QuickChatService
      */
     getChats(): Observable<any>
     {
-        return this._httpClient.get<Chat[]>('api/apps/chat/chats').pipe(
+        return this._httpClient.get<Chat[]>(`${this.api}/chats`).pipe(
             tap((response: Chat[]) =>
             {
                 this._chats.next(response);
@@ -60,7 +61,7 @@ export class QuickChatService
      */
     getChatById(id: string): Observable<any>
     {
-        return this._httpClient.get<Chat>('api/apps/chat/chat', {params: {id}}).pipe(
+        return this._httpClient.get<Chat>(`${this.api}/chat`, {params: {id}}).pipe(
             map((chat) =>
             {
                 // Update the chat

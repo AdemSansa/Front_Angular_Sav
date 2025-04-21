@@ -18,8 +18,13 @@ export default [
                path: ':id',
                children: [
                  {
+
                    path: '',
                    component: DetailsComponent,
+                    data: {
+                      breadcrumb: 'Details',
+                    },
+                    
                  },
                ],
                 },

@@ -3,7 +3,7 @@ import { RefList } from "../models/ref-list";
 export enum ComplaintsStatus {
  
     submitted = "Submitted",
-    HandledByTech = "Handled By Tech",
+    HandledByTech = "Handeled By Tech",
     InProgress = "In Progress",
     Resolved = "Resolved",
     Paused = "Paused",
@@ -13,7 +13,7 @@ export enum ComplaintsStatus {
 export const listComplaintsStatus: RefList<ComplaintsStatus>[] = [
 
     { key: ComplaintsStatus.submitted, value: "Submitted" },
-    { key: ComplaintsStatus.HandledByTech, value: "Handled By Tech" },
+    { key: ComplaintsStatus.HandledByTech, value: "Handeled By Tech" },
     { key: ComplaintsStatus.InProgress, value: "In Progress" },
     { key: ComplaintsStatus.Resolved, value: "Resolved" },
     { key: ComplaintsStatus.Paused, value: "Paused" },

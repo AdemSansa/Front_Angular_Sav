@@ -10,4 +10,15 @@
       max-width: 100%;
     }
   }
-  
+  #geocoder-container .mapboxgl-ctrl-geocoder {
+  width: 100% !important;       // or set it to '300px', etc.
+  max-width: none !important;
+  height: 48px;                 // your custom height
+  font-size: 14px;
+}
+
+#geocoder-container .mapboxgl-ctrl-geocoder input[type='text'] {
+  height: 150% !important;
+  padding: 10px;
+  font-size: 14px;
+}

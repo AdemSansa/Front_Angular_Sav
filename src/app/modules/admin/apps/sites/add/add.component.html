@@ -63,7 +63,7 @@
             <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
             <mat-label class="capitalize">{{ 'Company' | transloco }}</mat-label>
             <mat-select [(ngModel)]="site.companyId" name="company" required>
-                @for (row of displayedList.data; track row) {
+                @for (row of displayedList?.data; track row) {
                 <mat-option  [value]="row._id"> {{row.name}}</mat-option>
                 }
             </mat-select>
@@ -76,19 +76,7 @@
         
           <!--address-->
 
-          <div class="sm:col-span-3">
-            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-              <mat-label class="capitalize">{{ 'address' | transloco }}</mat-label>
-              <input [(ngModel)]="site.address" matInput name="address" type="text" required />
-            </mat-form-field>
-            @if ( myForm.controls['address'] && (myForm.controls['address'].dirty || myForm.submitted)
-            && myForm.controls['address'].hasError('required') ) {
-            <mat-error>
-              {{ 'This field is required' | transloco }}
-            </mat-error>
-            }
-            </div>
-
+        
             <!-- image -->
             <div class="sm:col-span-3">
               <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
@@ -136,24 +124,16 @@
                   
 
         </div>
-        <div class="form-group">
-            <label for="map">Pick Site Location:</label>
-            <div id="map" style="height: 400px; width: 100%; margin-bottom: 1rem;"></div>
-          </div>
+      
+            <div class="form-group">
+              <label for="map">Pick Site Location:</label>
+              <div id="map" class="w-[70%] h-[350px] rounded-lg mt-4 ml-50"></div>
+
+            </div>          </div>
           
           <!-- You can bind lat/lng to your form -->
-          <div class="form-group">
-            <mat-label class="capitalize">{{ 'latitude' | transloco }}</mat-label>
-            <input [(ngModel)]="lat" matInput name="latitude" type="text" required />
-            <mat-label  class="capitalize">{{ 'longitude' | transloco }}</mat-label>
-            <input [(ngModel)]="lng" matInput name="longitude" type="text" required />
-
-          
-
-            
-      
-          </div>
+     
       </div>
-    </div>
+  
   </form>
 </div>

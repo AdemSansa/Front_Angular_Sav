@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '../../../../../../../../@fuse/services/confirmation';
 
@@ -14,6 +14,9 @@ import { SiteService } from 'app/shared/services/site.service';
 import { Site } from 'app/shared/models/site';
 import { CompanyService } from 'app/shared/services/company.service';
 import L from 'leaflet';
+import 'mapbox-gl/dist/mapbox-gl.css'; // ✅ important!
+
+import mapboxgl from 'mapbox-gl';
 
  @Component({
     selector: 'app-details',
@@ -32,6 +35,14 @@ import L from 'leaflet';
     ],
 })
 export class DetailsComponent implements OnInit {
+    map!: mapboxgl.Map;
+  marker!: mapboxgl.Marker;
+  
+  mapboxToken: string = 'pk.eyJ1IjoieW9zcmEtbmFqYXIiLCJhIjoiY2xmdGw2a20wMDF4eTNxcDBiMHZycnZpdCJ9.PTo1tyEyJry6uEKaqRLkRQ'; // 👈 Put your real Mapbox token here
+  lat: number = 36.8065;
+  lng: number = 10.1815;
+
+    
     //********* INJECT SERVICES ***********//
     _siteService = inject(SiteService)
     _router= inject(Router);
@@ -42,38 +53,37 @@ export class DetailsComponent implements OnInit {
     //********* DECLARE CLASSES/ENUMS ***********//
     id = this._route.snapshot.paramMap.get('id') || undefined;
     site = new Site();
-    lat: number = 36.8065; // Default latitude (e.g., Tunis)
-    lng: number = 10.1815; // Default longitude (e.g., Tunis)
+
     ngOnInit(): void {
-     
         if (this.id) {
-            this._loadingService.show()
+            this._loadingService.show();
             forkJoin([
                 this._siteService.getOne(this.id),
             ]).subscribe({
-                next: (result:[Site ]) => {
+                next: (result: [Site]) => {
                     this.site = result[0];
-                    this.lat = this.site.latitude || 36.8065; // Default latitude (e.g., Tunis)
-                    this.lng = this.site.longitude || 10.1815; // Default longitude (e.g., Tunis)
-                    console.log(this.site.longitude,this.site.latitude);
-                    
-
+                    this.lat = this.site.latitude || 36.8065;
+                    this.lng = this.site.longitude || 10.1815;
+    
                     this._companyService.getOne(this.site.companyId).subscribe({
                         next: (company) => {
                             this.site.companyName = company.name;
                         },
                         error: () => {
-                            this._loadingService.hide()
+                            this._loadingService.hide();
                         }
                     });
-                    this._loadingService.hide()
+    
+                    this._loadingService.hide();
+    
+                    // ✅ Initialize map only after coords are updated
+                    this.initMap();
                 },
                 error: () => {
-                    this._loadingService.hide()
+                    this._loadingService.hide();
                 }
             });
         }
-        this.initMap()
     }
     updateOne() {
         this._router.navigate([`/home/sites/${this.site._id}/edit`]).then();
@@ -103,28 +113,42 @@ export class DetailsComponent implements OnInit {
         });
     }
 
-    map: any;
-  marker: any;
+    
+   
+    
     initMap(): void {
-        this.map = L.map('map').setView([this.lat, this.lng], 13);
-    
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(this.map);
-    
-        this.marker = L.marker([this.lat, this.lng], { draggable: true }).addTo(this.map);
-    
-        this.marker.on('dragend', (e: any) => {
-          const position = e.target.getLatLng();
-          this.lat = position.lat;
-          this.lng = position.lng;
+        mapboxgl.accessToken = this.mapboxToken;
+      
+        this.map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [this.lng, this.lat],
+          zoom: 13,
         });
-    
-        this.map.on('click', (e: any) => {
-          const { lat, lng } = e.latlng;
-          this.lat = lat;
-          this.lng = lng;
-          this.marker.setLatLng([lat, lng]);
+      
+        this.map.addControl(new mapboxgl.NavigationControl());
+      
+        this.map.on('load', () => {
+          console.log('Map loaded at:', this.lat, this.lng);
+      
+          this.marker = new mapboxgl.Marker()
+            .setLngLat([this.lng, this.lat])
+            //show its name 
+            .setPopup(new mapboxgl.Popup().setHTML(`<h4>${this.site.name}</h4>`))
+        
+            .addTo(this.map);
+      
+          console.log('Marker created:', this.marker);
+      
+          this.marker.on('dragend', () => {
+            const lngLat = this.marker.getLngLat();
+            this.lat = lngLat.lat;
+            this.lng = lngLat.lng;
+            console.log('New coords:', this.lat, this.lng);
+          });
+      
+          
         });
       }
+      
 }

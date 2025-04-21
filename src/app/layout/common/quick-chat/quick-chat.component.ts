@@ -92,7 +92,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     ngOnInit(): void
     {
         // Chat
-        this._quickChatService.chat$
+        this._quickChatService. chat$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((chat: Chat) =>
             {

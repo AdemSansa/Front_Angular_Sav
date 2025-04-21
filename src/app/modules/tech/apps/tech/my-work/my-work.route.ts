@@ -20,10 +20,16 @@ export default [
                 {
                     path: '',
                     component: DetailsComponent,
+                    data: {
+                      breadcrumb: 'Details',
+                    },
                 },
                 {
                     path: 'report',
                     component:ReportComponent,
+                    data: {
+                      breadcrumb: 'Report',
+                    },
                 },
                             ],
                              },
