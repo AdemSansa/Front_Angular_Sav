@@ -1,8 +1,8 @@
 
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import {  Router, RouterOutlet } from '@angular/router';
+import {  Router, RouterLink, RouterOutlet } from '@angular/router';
 import {FuseNavigationItem, FuseNavigationService, FuseVerticalNavigationComponent} from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NavigationService } from 'app/core/navigation/navigation.service';
@@ -10,12 +10,17 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
 import {MenuService} from "../../../../shared/services/menu.service";
+import { UserOpComponent } from 'app/layout/common/user/user.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Breadcrumb } from 'xng-breadcrumb/lib/types';
+import { BreadcrumbService } from 'xng-breadcrumb';
+import { QuickChatComponent } from "../../../common/quick-chat/quick-chat.component";
 
 @Component({
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [ FuseVerticalNavigationComponent,  MatIconModule, MatButtonModule,     RouterOutlet]
+    imports: [FuseVerticalNavigationComponent, MatIconModule, MatButtonModule, UserOpComponent, RouterLink, RouterOutlet, MatToolbarModule, QuickChatComponent]
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
 {
@@ -25,6 +30,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     isLoading: boolean = true;
     userInfo: any;
+    breadcrumbs: Breadcrumb[] = [];
 
     /**
      * Constructor
@@ -48,11 +54,17 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     /**
      * On init
      */
+    breadcrumbsService = inject(BreadcrumbService);
     ngOnInit(): void
     {
        
  
-        
+        this.breadcrumbsService.breadcrumbs$.subscribe((breadcrumbs: Breadcrumb[]) => {
+            this.breadcrumbs = breadcrumbs;
+            console.log('this.breadcrumbs', this.breadcrumbs);
+            
+        }
+        );
         this.menuService.getMenu().subscribe({
             next: (data) => {
                 this.navigation = data.menu;
@@ -68,6 +80,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
             .subscribe((user: User) =>
             {
                 this.user = user;
+                console.log('user', user);
+                
             });
 
         // Subscribe to media changes
@@ -78,6 +92,12 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
+            this._userService.get().subscribe((user) => {
+                this.userInfo = user;
+                console.log('userInfo', this.userInfo);
+            }
+            );
+            
     }
 
     /**

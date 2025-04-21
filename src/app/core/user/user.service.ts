@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from 'app/core/user/user.types';
+import { environment } from 'environments/environment';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -8,6 +9,7 @@ export class UserService
 {
     private _httpClient = inject(HttpClient);
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    private api =`${environment.api}/users`;
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -38,12 +40,11 @@ export class UserService
      */
     get(): Observable<User>
     {
-        return this._httpClient.get<User>('api/common/user').pipe(
-            tap((user) =>
-            {
+         return this._httpClient.get<User>(`${this.api}/me`).pipe(
+              tap((user) => {
                 this._user.next(user);
-            }),
-        );
+              }),
+            );
     }
 
     /**
@@ -53,7 +54,7 @@ export class UserService
      */
     update(user: User): Observable<any>
     {
-        return this._httpClient.patch<User>('api/common/user', {user}).pipe(
+        return this._httpClient.patch<User>(`${this.api}/change-status`, {user}).pipe(
             map((response) =>
             {
                 this._user.next(response);

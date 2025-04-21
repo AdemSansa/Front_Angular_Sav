@@ -4,9 +4,10 @@ import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import {FeatureCodes} from "./shared/enums/feature-codes";
 import { IsAuthorizedGuard } from 'app/core/auth/guards/isAuthorized.guard';
-import { UserComponent } from './layout/common/user/user.component';
 import { ChartComponent } from 'ng-apexcharts';
 import { ProfileComponent } from './modules/profile/profile.component';
+import { QuickChatComponent } from './layout/common/quick-chat/quick-chat.component';
+import { NotificationsComponent } from './layout/common/notifications/notifications.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -216,8 +217,10 @@ export const appRoutes: Route[] = [
                             feature: FeatureCodes.profile,
                         },
                         loadChildren: () => import('app/modules/profile/profile.routes'),}
+                    
                 ],
             },
+            
         ],
     },
 

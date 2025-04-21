@@ -128,21 +128,12 @@
                     </div>
                     <div class="form-group">
                         <label for="map">Pick Site Location:</label>
-                        <div id="map" style="height: 400px; width: 100%; margin-bottom: 1rem;"></div>
+                        <div id="map" class="w-[70%] h-[350px] rounded-lg mt-4 ml-50"></div>
+
                       </div>
                       
                       <!-- You can bind lat/lng to your form -->
-                      <div class="form-group">
-                        <mat-label class="capitalize">{{ 'latitude' | transloco }}</mat-label>
-                        <input [(ngModel)]="lat" matInput name="latitude" type="text" required />
-                        <mat-label  class="capitalize">{{ 'longitude' | transloco }}</mat-label>
-                        <input [(ngModel)]="lng" matInput name="longitude" type="text" required />
-            
-                      
-            
-                        
                   
-                      </div>
                 </div>
             </div>
         </form>

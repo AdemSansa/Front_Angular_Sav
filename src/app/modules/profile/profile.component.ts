@@ -6,10 +6,11 @@ import { CompanyService } from 'app/shared/services/company.service';
 import { UserService } from 'app/shared/services/user.service';
 import { Router } from '@angular/router';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-
+import { UserOpComponent } from 'app/layout/common/user/user.component';
+import { QuickChatComponent } from 'app/layout/common/quick-chat/quick-chat.component';
 @Component({
   selector: 'app-profile',
-  imports: [DatePipe],
+  imports: [DatePipe,UserOpComponent,QuickChatComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

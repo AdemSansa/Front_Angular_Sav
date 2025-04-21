@@ -2,11 +2,12 @@ import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { FuseLoadingService } from '@fuse/services/loading/loading.service';
 import { finalize, Observable, take } from 'rxjs';
-
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 export const fuseLoadingInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> =>
 {
     const fuseLoadingService = inject(FuseLoadingService);
     let handleRequestsAutomatically = false;
+
 
     fuseLoadingService.auto$
         .pipe(take(1))

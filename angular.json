@@ -52,6 +52,9 @@
                         },
                         "styles": [
                             "node_modules/leaflet/dist/leaflet.css",
+                            "node_modules/mapbox-gl/dist/mapbox-gl.css",
+                       
+                            "node_modules/@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css",
 
                             "src/@fuse/styles/tailwind.scss",
                             "src/@fuse/styles/themes.scss",

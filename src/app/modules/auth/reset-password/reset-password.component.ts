@@ -1,12 +1,12 @@
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
@@ -30,6 +30,9 @@ export class AuthResetPasswordComponent implements OnInit
     };
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
+    private route = inject(ActivatedRoute);
+    token!: string;
+
 
     /**
      * Constructor
@@ -50,6 +53,10 @@ export class AuthResetPasswordComponent implements OnInit
      */
     ngOnInit(): void
     {
+        this.route.queryParamMap.subscribe(params => {
+            this.token = params.get('token') || '';
+            console.log('Token from URL:', this.token);
+          });
         // Create the form
         this.resetPasswordForm = this._formBuilder.group({
                 password       : ['', Validators.required],
@@ -75,6 +82,8 @@ export class AuthResetPasswordComponent implements OnInit
         {
             return;
         }
+        //get the token from parameters
+        
 
         // Disable the form
         this.resetPasswordForm.disable();
@@ -83,7 +92,7 @@ export class AuthResetPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Send the request to the server
-        this._authService.resetPassword(this.resetPasswordForm.get('password').value)
+        this._authService.resetPassword(this.resetPasswordForm.get('password').value,this.token)
             .pipe(
                 finalize(() =>
                 {

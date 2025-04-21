@@ -153,6 +153,9 @@ export class ListComponent implements OnInit {
       this.getList();
     }, this.doneTypingInterval);
   }
+  openMap() {
+    this._router.navigate(['map'], { relativeTo: this._route }).then();
+  }
 
 
 }

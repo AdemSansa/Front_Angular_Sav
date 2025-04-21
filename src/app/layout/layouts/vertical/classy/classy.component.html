@@ -1,26 +1,29 @@
 <!-- Navigation -->
 <fuse-vertical-navigation
-    class="dark bg-red-950 print:hidden"
+    class="dark bg-gradient-to-b from-[#1f1c2c] via-[#302b63] to-[#24243e] text-white shadow-xl border-r border-gray-700 print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation"
     [opened]="!isScreenSmall"
 >
-
-
-
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
-     
+      
+    
+       
+        <user></user>
     </ng-container>
+
     <!-- Navigation footer hook -->
     <ng-container fuseVerticalNavigationContentFooter>
-        <div
-            class="flex flex-0 items-center justify-center h-16 pr-6 pl-2 mt-8 mb-2 opacity-50 mx-auto"
-        ></div>
+        <div class="flex items-center justify-center h-16 opacity-60 text-sm text-center text-gray-300 px-4">
+            <div>
+                <p class="mb-0.5">Need Help?</p>
+                <a class="underline hover:text-primary-300" href="mailto:support@sav.tn">supportsav.tn</a>
+            </div>
+        </div>
     </ng-container>
 </fuse-vertical-navigation>
-
 <!-- Wrapper -->
 <div class="flex flex-col flex-auto w-full min-w-0">
     <!-- Header -->
@@ -31,6 +34,23 @@
         <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
             <mat-icon svgIcon="heroicons_outline:bars-3"></mat-icon>
         </button>
+        <mat-toolbar class="bg-white shadow-md px-6 py-3 rounded-b-md">
+            <nav class="text-gray-800 flex items-center flex-wrap text-sm font-medium space-x-2">
+              @for (breadcrumb of breadcrumbs; track breadcrumb) {
+                <ng-container>
+                  <a
+                    [routerLink]="breadcrumb.routeLink"
+                    class="hover:underline cursor-pointer text-blue-600 transition-colors duration-200 text-xl"
+                  >
+                    {{ breadcrumb.label }}
+                    <span class="text-gray-400">&gt;</span>
+                  </a>
+                </ng-container>
+              }
+            </nav>
+          </mat-toolbar>
+          
+
 
         <ng-template #separatorTemplate>
             <mat-icon svgIcon="heroicons_outline:chevron-right"></mat-icon>
@@ -46,6 +66,8 @@
         <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
         Otherwise, layout changes won't be registered and the view won't be updated! -->
         @if (true) {
+        
+            
             <router-outlet></router-outlet>
         }
     </div>
@@ -57,3 +79,4 @@
 </div>
 
 <!-- Quick chat -->
+<quick-chat></quick-chat>
