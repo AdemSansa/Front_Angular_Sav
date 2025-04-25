@@ -18,6 +18,7 @@ import { DatePipe } from '@angular/common';
 import { UserService } from 'app/shared/services/user.service';
 import { HistoryService } from 'app/shared/services/history.service';
 import {MatExpansionModule,MatAccordion} from "@angular/material/expansion";
+import { Duration } from 'luxon';
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -54,6 +55,8 @@ export class DetailsComponent implements OnInit {
     _loadingService= inject(LoadingService);
     report:Report[] = [];
     _userService= inject(UserService);    
+    complaintDuration: string = '0';
+    
     //********* DECLARE CLASSES/ENUMS ***********//
     id = this._route.snapshot.paramMap.get('id') || undefined;
     complaint = new Complaint();
@@ -144,10 +147,20 @@ export class DetailsComponent implements OnInit {
         ).subscribe({
             next: results => {
                 this.history = results.data;
+                //flip the history array to show the latest history first
+                this.history = this.history.reverse();
                 this.openFilter = false;
                 console.log(this.history);
+                //calculate duration of the complaint
+               
+                this.complaintDuration = Duration.fromMillis(new Date(this.history[this.history.length-1].createdAt).getTime()- new Date(this.complaint.createdAt!).getTime()).toFormat('d');
+      
+                console.log(this.history);;
+                
+
                 
                 this._loadingService.hide();
+                
             },
             error: () => {
                 this._loadingService.hide();

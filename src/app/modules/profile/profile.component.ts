@@ -74,5 +74,12 @@ saveAvatar(avatar: string) {
     error: (err) => console.error(err)
   });
 }
+goToEditProfile() {
+  this._router.navigate(['edit'], { relativeTo: this._activatedRoute });
+}
+
+
+
+
 }
 

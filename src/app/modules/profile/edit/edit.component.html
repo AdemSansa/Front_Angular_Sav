@@ -1,0 +1,81 @@
+<div class="max-w-4xl mx-auto p-8 space-y-6 bg-white dark:bg-gray-900 shadow-xl rounded-2xl">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Profile</h2>
+  
+    <form   class="space-y-6" (submit)="saveProfile()">
+
+
+         <!-- Profile Picture Section -->
+    <div class="flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-sm">
+        <img
+          
+        [src]="user.avatar || 'https://i.pravatar.cc/300'"
+          alt="Profile"
+          class="w-40 h-40 rounded-full object-cover border-4 border-red-500 shadow-lg"
+        />
+        <!-- Button to toggle avatar selection -->
+  
+        <!-- Parent must be relative to position the popover absolutely -->
+    <!-- Toggle Button -->
+     </div>
+    <button
+      class="mt-4 text-sm font-medium text-blue-600 hover:underline"
+      (click)="showAvatarPicker = !showAvatarPicker"
+    >
+      Change Avatar
+    </button>
+  
+    <!-- Popover Avatar Picker -->
+   <!-- Popover Avatar Picker -->
+   @if (showAvatarPicker) {
+    <div
+      class="absolute z-50 bottom-0 left-32 right-5 w-[340px] sm:w-[480px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-xl rounded-2xl p-5 grid grid-cols-4 sm:grid-cols-5 gap-5"
+    >
+      @for (avatar of avatarList; track avatar) {
+        <img
+          [src]="avatar"
+          alt="Avatar option"
+          class="w-20 h-20 rounded-full object-cover cursor-pointer border-2 transition duration-200 hover:scale-105 hover:border-blue-400"
+          [class.border-blue-600]="user.avatar === avatar"
+          [class.ring-2]="user.avatar === avatar"
+          (click)="selectAvatar(avatar)"
+        />
+      }
+      <button
+      mat-raised-button
+      color="primary"
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold  rounded-xl shadow-md text-sm transition mt-15 w-full "
+      (click)="showAvatarPicker = !showAvatarPicker"
+    >
+      <mat-icon class="mat-18">close</mat-icon>
+    </button>
+    </div>
+    <!-- Close button-->
+   
+  
+  }
+      <!-- Name -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="user.name" name="name" placeholder="John Doe" />
+      </mat-form-field>
+  
+      <!-- Email -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="user.email"  name="Email" type="email" />
+      </mat-form-field>
+  
+    
+  
+      <!-- Submit Button -->
+      <button
+        mat-flat-button
+        color="primary"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-semibold shadow-md"
+        type="submit"
+      >
+        Save Changes
+      </button>
+    </form>
+  </div>
+  

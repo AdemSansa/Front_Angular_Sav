@@ -4,18 +4,21 @@ import {Company} from "./company";
 export class User {
   id?: string;
   // tslint:disable-next-line:variable-name
-  _id?: string;
-  companyId: Company;
+  _id: string;
+  companyId?: Company;
   name?: string;
-  site: string;
+  site?: string;
   avatar?: string;
   email?: string;
   phone?: string;
   password?: string;
   groupsId?: Group;
   companyName?: string;
+  status?: string;
   createdAt?: Date;
+
   updatedAt?: Date;
+
 
 }
 

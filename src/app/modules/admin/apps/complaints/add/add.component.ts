@@ -144,9 +144,20 @@ export class AddComponent implements OnInit {
             this._router.navigate([`../`], { relativeTo: this._route }).then();
             }
           },
-          error: () => {
+          error: (err) => {
             this._loadingService.hide();
-            this._snackBarService.openSnackBar("Cannot Create Complaint");
+            console.log();
+          
+            
+            this._snackBarService.openSnackBar(err.error.message);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: err.error.message,
+              confirmButtonText: 'OK',
+              
+            });
+
           },
         })
     }

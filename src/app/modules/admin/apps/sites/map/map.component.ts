@@ -11,10 +11,11 @@ import { FilterOptions } from 'app/shared/models/filter-options';
 import { Pagination } from 'app/shared/models/pagination';
 import { LoadingService } from 'app/shared/services/loading.service';
 import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [MatTooltipModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
@@ -74,7 +75,7 @@ export class MapComponent implements OnInit {
             this.openFilter = false;
         }
     });
-}
+  }
 
   initMap(): void {
     mapboxgl.accessToken = this.mapboxToken;
@@ -101,7 +102,57 @@ export class MapComponent implements OnInit {
         // Create a marker for each site
         const marker = new mapboxgl.Marker()
           .setLngLat([this.lng, this.lat])
-          .setPopup(new mapboxgl.Popup().setHTML(`<h4>${site.name}</h4>`))
+          .setPopup(new mapboxgl.Popup().setHTML(`
+           <div style="padding: 12px; background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif; max-width: 250px;">
+          <h3 style="margin: 0 0 10px; color: #2c3e50;">${site.name}</h3>
+
+          <!-- Address section -->
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="color: #555;">${site.address}</span>
+            <button onclick="copyToClipboard('${site.address.replace(/'/g, "\\'")}', this)" style="position: relative; border: none; background: transparent; cursor: pointer;">
+              <i class="material-icons" style="font-size: 18px; color: #007bff;">content_copy</i>
+              <span class="copied-tooltip" style="
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: #fff;
+                font-size: 10px;
+                padding: 2px 5px;
+                border-radius: 4px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+              ">Copied!</span>
+            </button>
+          </div>
+
+          <!-- Coordinates section -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+            <span style="color: #555; font-weight: bold;">COPY COORDINATES</span>
+            <button onclick="copyToClipboard('${site.latitude}, ${site.longitude}', this)" style="position: relative; border: none; background: transparent; cursor: pointer;">
+              <i class="material-icons" style="font-size: 18px; color: #007bff;">content_copy</i>
+              <span class="copied-tooltip" style="
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: #fff;
+                font-size: 10px;
+                padding: 2px 5px;
+                border-radius: 4px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+              ">Copied!</span>
+            </button>
+          </div>
+        </div>
+
+          `)
+          )
           .addTo(this.map);
   
         console.log('Marker created:', marker);
@@ -126,7 +177,30 @@ export class MapComponent implements OnInit {
       
     });
   }
-  
-  
-
 }
+declare global {
+  interface Window {
+    copyToClipboard: (text: string, el?: HTMLElement) => void;
+  }
+}
+
+window.copyToClipboard = function (text: string, el?: HTMLElement) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log('Copied to clipboard:', text);
+
+    if (el) {
+      const tooltip = el.querySelector('.copied-tooltip') as HTMLElement;
+      if (tooltip) {
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = 'translateX(-50%) translateY(-5px)';
+        setTimeout(() => {
+          tooltip.style.opacity = '0';
+          tooltip.style.transform = 'translateX(-50%) translateY(0)';
+        }, 1000);
+      }
+    }
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+};
+

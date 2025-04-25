@@ -1,8 +1,10 @@
 import { I18nPluralPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
 import {AuthService} from "../../../shared/services/auth.service";
+import { User } from 'app/core/user/user.types';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
     selector: 'auth-sign-out',
@@ -12,6 +14,8 @@ import {AuthService} from "../../../shared/services/auth.service";
 })
 export class AuthSignOutComponent implements OnInit, OnDestroy
 {
+
+
     countdown: number = 5;
     countdownMapping: any = {
         '=1'   : '# second',
@@ -29,6 +33,8 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
     {
     }
 
+    _userService = inject(UserService)
+    user:User
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
@@ -38,14 +44,41 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+       
+        // Remove the access token from the local storage
+               this._userService.user$.subscribe((user: User) => {
+                  if (user) {
+                      console.log(user);
+                      
+                      user.status = 'not-visible';
+                      this._userService.update(user).subscribe({
+                          next: (user) => {
+                              console.log('User status updated successfully');
+                              console.log(user);
+                              
+      
+                          },
+                          error: (error) => {
+                              console.error('Error updating user status:', error);
+                          },
+                      });
+      
+                  }
+              });
+
         // Sign out
         this._authService.signOut();
+       
 
+
+       
+        
         // Redirect after the countdown
         timer(1000, 1000)
             .pipe(
                 finalize(() =>
                 {
+                    
                     this._router.navigate(['sign-in']);
                 }),
                 takeWhile(() => this.countdown > 0),

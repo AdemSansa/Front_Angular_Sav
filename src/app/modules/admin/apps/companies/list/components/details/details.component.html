@@ -61,8 +61,42 @@
                             }
                         </div>
                     </div>
+                    <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                            {{ 'Sites related to this company' | transloco }}
+                        </h2>
+                        @if (company.sites.length > 0) {
+                        
+                    
+                        <div >
+                            <ul class="divide-y divide-gray-300 dark:divide-gray-700">
+                                @for (site of company.sites; track site) {
+                                <li  class="py-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                                        <span class="font-medium text-gray-700 dark:text-gray-200">
+                                            {{ site.name }}
+                                        </span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ site.address || 'N/A' }}
+                                        </span>
+                                    </div>
+                                </li>
+                            }
+                            </ul>
+                        
+                        </div>
+                    }
+                    @else {
+                        <ng-template >
+                            <p class="text-gray-500 dark:text-gray-400">{{ 'No sites found for this company' | transloco }}</p>
+                        </ng-template>
+                    }
+                    </div>
                 </div>
             </div>
         </form>
+        
     </div>
+
+    
 }

@@ -52,12 +52,37 @@
                         </div>
                     
                         <!-- Assign Button TO to tech-->
-                        <div class="sm:col-span-3 flex justify-end ">
-                            <button mat-raised-button color="primary" (click)="openAssignDialog(complaint)" [disabled]="complaint.status !== 'Submitted'">
-                                {{ 'Assign' | transloco }}
-                            </button>
-                            </div>  
-
+                        <div class="sm:col-span-9 flex flex-wrap justify-end gap-3 mt-4">
+                            <!-- Assign button (only when status is 'Submitted') -->
+                            @if(complaint.status === 'Submitted') {
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="openAssignDialog(complaint)"
+                                >
+                                    {{ 'Assign' | transloco }}
+                                </button>
+                            }
+                        
+                            <!-- Reassign and Unassign buttons (only when status is 'Handeled By Tech') -->
+                            @if(complaint.status === 'Handeled By Tech') {
+                                <button
+                                    mat-raised-button
+                                    color="accent"
+                                    (click)="openAssignDialog(complaint)"
+                                >
+                                    {{ 'Reassign' | transloco }}
+                                </button>
+                        
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="unassignTechnician(complaint)"
+                                >
+                                    {{ 'Unassign' | transloco }}
+                                </button>
+                            }
+                        </div>
                                                  
                     </div>
                 </div>

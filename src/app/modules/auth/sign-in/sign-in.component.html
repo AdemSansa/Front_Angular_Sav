@@ -49,24 +49,30 @@
         <!-- Email -->
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Email</mat-label>
-          <input id="email" matInput [formControlName]="'email'">
+          <input id="email" matInput [formControlName]="'email'" >
           @if (signInForm.get('email').hasError('required')) {
             <mat-error>Email is required</mat-error>
           }
           @if (signInForm.get('email').hasError('email')) {
             <mat-error>Invalid email format</mat-error>
           }
+
         </mat-form-field>
 
         <!-- Password -->
         <mat-form-field class="w-full mt-4" appearance="outline">
           <mat-label>Password</mat-label>
-          <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+          <input  id="password" matInput type="password" [formControlName]="'password'" #passwordField >
           <button mat-icon-button type="button" (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'" matSuffix>
             <mat-icon [svgIcon]="passwordField.type === 'password' ? 'heroicons_solid:eye' : 'heroicons_solid:eye-slash'"></mat-icon>
           </button>
           <mat-error>Password is required</mat-error>
+        
         </mat-form-field>
+        @if(loginFailed)
+        {
+          <mat-error> Password or email are Incorrect</mat-error>
+        }
 
         <!-- Options -->
         <div class="flex items-center justify-between mt-4">

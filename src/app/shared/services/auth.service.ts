@@ -5,6 +5,8 @@ import { switchMap } from 'rxjs/operators';
 import { UserService } from './user.service';
 import { environment } from '../../../environments/environment';
 import {AuthUtils} from "../../core/auth/auth.utils";
+import { User } from '../models/user';
+
 
 @Injectable({
     providedIn: 'root',
@@ -88,7 +90,8 @@ export class AuthService {
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
+      
+        
         localStorage.removeItem('accessToken');
         localStorage.removeItem('connectedSite');
 

@@ -50,8 +50,8 @@ export const appConfig: ApplicationConfig = {
                         label: 'English',
                     },
                     {
-                        id   : 'tr',
-                        label: 'Turkish',
+                        id   : 'fr',
+                        label: 'French',
                     },
                 ],
                 defaultLang         : 'en',
