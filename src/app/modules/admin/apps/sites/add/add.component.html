@@ -58,20 +58,7 @@
             }
           </div>
 
-          <!--company name-->
-          <div class="sm:col-span-3">
-            <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-            <mat-label class="capitalize">{{ 'Company' | transloco }}</mat-label>
-            <mat-select [(ngModel)]="site.companyId" name="company" required>
-                @for (row of displayedList?.data; track row) {
-                <mat-option  [value]="row._id"> {{row.name}}</mat-option>
-                }
-            </mat-select>
-       
-            </mat-form-field>
-
-            
-          </div>
+          
 
         
           <!--address-->

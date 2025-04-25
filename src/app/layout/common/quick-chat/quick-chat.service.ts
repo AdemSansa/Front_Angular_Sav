@@ -80,5 +80,5 @@ export class QuickChatService
                 return of(chat);
             }),
         );
-    }
+    }z
 }

@@ -11,6 +11,7 @@ import { MatButton } from '@angular/material/button';
 import {TranslocoPipe} from "@ngneat/transloco";
 import {LoadingService} from "../../../../../../../shared/services/loading.service";
 import {forkJoin} from "rxjs";
+import { Site } from 'app/shared/models/site';
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -34,6 +35,7 @@ export class DetailsComponent implements OnInit {
     _route= inject(ActivatedRoute);
     _fuseConfirmationService= inject(FuseConfirmationService);
     _loadingService= inject(LoadingService);
+    sites : Site[] = [];
     //********* DECLARE CLASSES/ENUMS ***********//
     id = this._route.snapshot.paramMap.get('id') || undefined;
     company = new Company();
@@ -43,8 +45,11 @@ export class DetailsComponent implements OnInit {
             forkJoin([
                 this._companyService.getOne(this.id),
             ]).subscribe({
-                next: (result:[Company ]) => {
+                next: (result:[Company]) => {
                     this.company = result[0];
+                   console.log(this.company);
+                   
+                    
                     this._loadingService.hide()
                 },
                 error: () => {
@@ -52,6 +57,7 @@ export class DetailsComponent implements OnInit {
                 }
             });
         }
+        
     }
     updateOne() {
         this._router.navigate([`/home/companies/${this.company._id}/edit`]).then();

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ProfileComponent } from './profile.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { EditComponent } from './edit/edit.component';
 
 
 export default [
@@ -19,6 +20,14 @@ export default [
                 breadcrumb: 'change-password',
               },
             },
+            {
+              path:'edit',
+              component:EditComponent,
+              data: {
+                breadcrumb: 'edit',
+              },
+          
+            }
           
 
     ]

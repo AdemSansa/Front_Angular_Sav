@@ -1,17 +1,32 @@
-
 <h2 mat-dialog-title>Assign Technician</h2>
 <mat-dialog-content>
   <mat-form-field class="w-full">
     <mat-label>Select a Technician</mat-label>
-    <mat-select  [(ngModel)]="selectedTechnician" >
-        @for (tech of data.technicians; track tech._id) {
-      <mat-option  [value]="tech._id">
-        {{ tech.name }}
-      </mat-option>
-    }
+    <mat-select [(ngModel)]="selectedTechnician">
+      @for (tech of data.technicians; track tech._id) {
+        <mat-option 
+          [value]="tech._id" 
+          [disabled]="tech.status === 'not-visible' || tech.status === 'busy'">
+          <span class="flex items-center gap-2">
+            <!-- Status Circle -->
+            <span 
+              class="w-3 h-3 rounded-full" 
+              [ngClass]="{
+                'bg-green-500': tech.status === 'online',
+                'bg-yellow-400': tech.status === 'away',
+                'bg-red-500': tech.status === 'busy',
+                'bg-gray-400': tech.status === 'not-visible'
+              }"
+            ></span>
+            <span>{{ tech.name }}</span>
+            <small class="text-xs text-gray-500 ml-2">({{ tech.status }})</small>
+          </span>
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button (click)="closeDialog()">Cancel</button>
   <button mat-button color="primary" (click)="assignTechnician()" [disabled]="!selectedTechnician">

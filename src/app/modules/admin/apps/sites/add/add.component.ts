@@ -26,6 +26,7 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 import mapboxgl from 'mapbox-gl';
 import { size, values } from 'lodash';
+import { UserService } from 'app/shared/services/user.service';
 @Component({
   selector: 'app-details',
   templateUrl: './add.component.html',
@@ -78,42 +79,28 @@ export class AddComponent implements OnInit {
       lat: number = 36.8065;
       lng: number = 10.1815;
     
+      _userService = inject(UserService)
 
     ngOnInit(): void {
         this.initMap();
-        this.getCompanies();
+       
+        
     }
 
 
     site = new Site();
 
 
-    getCompanies() {
-        this._companyService.getList( 
-          this.currentSize.toString(),
-          this.currentPage.toString(),
-          this.filterSearch,
-          this.filterType.toString(),
-          this.filterStatus.toString(),
-        ).subscribe({
-
-          next: results => {
-            this.displayedList = results;
-            this.openFilter = false;
-            this._loadingService.hide();
-           
-        },
-        error: () => {
-            this._loadingService.hide();
-            this.openFilter = false;
-        }
-        });
-    }
+   
   addOne(myForm: NgForm): void {
     if (myForm.valid) {
         this.site.latitude = this.lat;
         this.site.longitude = this.lng;
+        const token = this._userService.getToken();
+        const companyId = this._userService.decodeToken(token)['companyId'];
+        this.site.companyId = companyId;
 
+        
       
         this._siteService.createOne(this.site).subscribe(() => {
             this._router.navigate([`../`], { relativeTo: this._route }).then();

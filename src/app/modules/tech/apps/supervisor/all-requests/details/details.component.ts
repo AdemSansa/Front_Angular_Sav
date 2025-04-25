@@ -100,6 +100,7 @@ export class DetailsComponent implements OnInit {
                     confirmButtonText: 'OK',
                 });
                 this._loadingService.hide()
+                this._router.navigate(['../'], { relativeTo: this._route }).then();
              
             },
             error: () => {
@@ -113,6 +114,36 @@ export class DetailsComponent implements OnInit {
             }
         })
       }
+      unassignTechnician(complaint:Complaint) {
+        this._loadingService.show()
+        console.log(complaint);
+        
+        complaint.assignedTo=null
+        complaint.status="Submitted"
+        this._complaintService.updateOne(complaint).subscribe({ 
+            next: () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Technician Unassigned',
+                    text: 'The technician has been unassigned successfully.',
+                    confirmButtonText: 'OK',
+                });
+                this._loadingService.hide()
+                this._router.navigate(['../'], { relativeTo: this._route }).then();
+             
+            },
+            error: () => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to unassign the technician.',
+                    confirmButtonText: 'OK',
+                });
+                this._loadingService.hide()
+            }
+
+        })
+    }
 
 
   }

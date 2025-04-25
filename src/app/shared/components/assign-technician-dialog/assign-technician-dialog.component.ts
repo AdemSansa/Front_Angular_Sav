@@ -6,10 +6,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogActions } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-assign-technician-dialog',
-  imports: [MatFormFieldModule,MatDialogModule,MatSelectModule,FormsModule ,MatDialogActions, MatButton, MatLabel],
+  imports: [MatFormFieldModule,MatDialogModule,MatSelectModule,FormsModule ,MatDialogActions, MatButton, MatLabel, NgClass],
   templateUrl: './assign-technician-dialog.component.html',
   styleUrl: './assign-technician-dialog.component.scss'
 })

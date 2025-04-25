@@ -62,13 +62,16 @@
                         {{ 'Technician' | transloco }}
                     </h2>
     
-                    <div class="space-y-2 text-gray-800 dark:text-gray-300 text-sm mb-6">
+                    <div class="space-y-2 text-gray-800 dark:text-gray-300 text-xl mb-6">
                         @if( complaint.technicianName){
                         <p >
                             <strong>{{ 'Assigned Technician' | transloco }}:</strong> {{ complaint.technicianName }}
                         </p>
                         <p >
-                            <strong>{{ 'Assigned on' | transloco }}:</strong>                         </p>
+                            <strong>{{ 'Assigned on' | transloco }}: 
+                            </strong>
+                            {{ complaint.assignDate | date:'dd MMMM yyyy hh:mm:ss' }}
+                            </p>
                     }
                     </div>
     

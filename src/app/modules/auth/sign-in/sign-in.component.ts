@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,6 +13,8 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import {AuthService} from "../../../shared/services/auth.service";
 import {UserService} from "../../../shared/services/user.service";
 import {User} from "../../../shared/models/user";
+import { SnackBarService } from 'app/shared/services/snack-bar.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'auth-sign-in',
@@ -20,11 +22,14 @@ import {User} from "../../../shared/models/user";
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     standalone: true,
-    imports: [RouterLink, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule, MatProgressSpinnerModule]
+    imports: [RouterLink,CommonModule, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule, MatProgressSpinnerModule]
 })
 export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
+    snackBarService = inject(SnackBarService)
+    loginFailed :Boolean = false;
+
 
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
@@ -106,6 +111,9 @@ export class AuthSignInComponent implements OnInit
             () => {
                 // Re-enable the form
                 this.signInForm?.enable();
+                this.snackBarService.openSnackBar('Invalid email or password', 'error');
+                this.loginFailed = true;
+
             },
         );
     }

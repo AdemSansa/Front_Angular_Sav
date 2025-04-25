@@ -7,7 +7,7 @@
     <!-- Left: Mini Profile Info -->
     <div class="flex items-center gap-4">
       <img
-        src="{{ user.avatar || 'https://i.pravatar.cc/300' }}"
+        [src]="user.avatar"
         alt="Avatar"
         class="w-12 h-12 rounded-full border-2 border-red-600 shadow-md"
       />
@@ -31,7 +31,7 @@
         Message
       </button>
 
-      <button
+      <button (click)="goToEditProfile()"
         mat-flat-button
         color="primary"
         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-1.5 rounded-xl shadow-md text-sm transition"
