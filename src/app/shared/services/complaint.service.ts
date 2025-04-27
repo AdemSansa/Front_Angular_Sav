@@ -89,6 +89,30 @@ startWorking(id:string): Observable<null> {
 getDischargePdf(code:string): Observable<Blob> {
   return this.http.get(`${this.endpoint}/${code}/pdf`, { responseType: 'blob' });
 }
+getUnderReviwedComplaints( limit: string,
+  page: string,
+  search: string,
+  filterType:string,
+  filterStatus:string,
+): Observable<Pagination<Complaint>> {
+
+  let searchParams = new HttpParams();
+  searchParams = searchParams.append('limit', limit);
+  searchParams = searchParams.append('page', page);
+  if (search) {
+    searchParams = searchParams.append('search', search);
+  }
+  if (filterType) {
+    searchParams = searchParams.append('filterType', filterType);
+  }
+  if (filterStatus) {
+    searchParams = searchParams.append('filterStatus', filterStatus);
+  }
+  return this.http.get<Pagination<Complaint>>(`${this.endpoint}/requests/under-reviewed`, {
+    params: searchParams,
+  });
+}
+
   
 }
 

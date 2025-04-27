@@ -15,12 +15,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Breadcrumb } from 'xng-breadcrumb/lib/types';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import { QuickChatComponent } from "../../../common/quick-chat/quick-chat.component";
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [FuseVerticalNavigationComponent, MatIconModule, MatButtonModule, UserOpComponent, RouterLink, RouterOutlet, MatToolbarModule, QuickChatComponent]
+    imports: [FuseVerticalNavigationComponent, MatIconModule, MatButtonModule, UserOpComponent, RouterLink, RouterOutlet, MatToolbarModule,NgClass]
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
 {

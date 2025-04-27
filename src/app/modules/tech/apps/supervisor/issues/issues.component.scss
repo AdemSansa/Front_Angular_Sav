@@ -1,0 +1,21 @@
+.row-grid {
+    /* default: under '400px' */
+    grid-template-columns: 75px auto 30px;
+    /* xs: '400px' */
+    @media (min-width: 400px) {
+      grid-template-columns: 75px auto 30px;
+    }
+    /* sm: '600px' */
+    @media (min-width: 600px) {
+      grid-template-columns: 20px 75px auto 125px 125px 30px;
+    }
+    /* md: '960px' */
+    @media (min-width: 960px) {
+      grid-template-columns: 20px 75px auto 125px 125px 125px 125px  30px;
+    }
+    /* lg: '1280px' */
+    @media (min-width: 1280px) {
+      grid-template-columns: 20px 75px auto 125px 125px 125px 125px  30px;
+    }
+  }
+  
