@@ -10,7 +10,7 @@ import { UserOpComponent } from 'app/layout/common/user/user.component';
 import { QuickChatComponent } from 'app/layout/common/quick-chat/quick-chat.component';
 @Component({
   selector: 'app-profile',
-  imports: [DatePipe,UserOpComponent,QuickChatComponent],
+  imports: [DatePipe],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

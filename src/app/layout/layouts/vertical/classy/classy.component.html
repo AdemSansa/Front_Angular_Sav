@@ -41,6 +41,7 @@
                   <a
                     [routerLink]="breadcrumb.routeLink"
                     class="hover:underline cursor-pointer text-blue-600 transition-colors duration-200 text-xl"
+                    [ngClass]="{ 'text-gray-400': breadcrumb.isActive }"
                   >
                     {{ breadcrumb.label }}
                     <span class="text-gray-400">&gt;</span>
@@ -78,5 +79,4 @@
   </div>-->
 </div>
 
-<!-- Quick chat -->
-<quick-chat></quick-chat>
+

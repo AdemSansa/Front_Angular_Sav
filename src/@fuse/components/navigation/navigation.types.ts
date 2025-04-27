@@ -27,6 +27,7 @@ export interface FuseNavigationItem {
         classes?: string;
     };
     children?: FuseNavigationItem[];
+    code?: string;
     meta?: any;
 }
 

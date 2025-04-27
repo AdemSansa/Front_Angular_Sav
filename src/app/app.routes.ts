@@ -182,10 +182,10 @@ export const appRoutes: Route[] = [
                         canActivateChild: [IsAuthorizedGuard],
                         path: 'tech',
                         data: {
-                            breadcrumb: 'Requests',
+                            breadcrumb: 'Tech',
                             feature: FeatureCodes.complaints,
                         },
-                        loadChildren: () => import('app/modules/tech/apps/supervisor/all-requests/all-requests.route'),
+                        loadChildren: () => import('app/modules/tech/apps/supervisor/supervisor.routes'),
                     },
                     {
                         canActivate: [IsAuthorizedGuard],
