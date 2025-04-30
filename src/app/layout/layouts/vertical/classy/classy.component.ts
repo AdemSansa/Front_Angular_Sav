@@ -16,12 +16,12 @@ import { Breadcrumb } from 'xng-breadcrumb/lib/types';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import { QuickChatComponent } from "../../../common/quick-chat/quick-chat.component";
 import { NgClass } from '@angular/common';
-
+import { NotificationsComponent } from 'app/layout/common/notifications/notifications.component';
 @Component({
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [FuseVerticalNavigationComponent, MatIconModule, MatButtonModule, UserOpComponent, RouterLink, RouterOutlet, MatToolbarModule,NgClass]
+    imports: [FuseVerticalNavigationComponent, MatIconModule, MatButtonModule, UserOpComponent, RouterLink, RouterOutlet, MatToolbarModule, NgClass, NotificationsComponent]
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
 {

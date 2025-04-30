@@ -1,0 +1,201 @@
+<form class="w-full max-w-6xl mx-auto p-6" [formGroup]="notificationForm" (ngSubmit)="submitNotification()">
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- LEFT: Notification Details -->
+    <mat-card class="w-full md:w-1/2 p-6 shadow-lg rounded-lg border-t-4 border-blue-500">
+      <div class="mb-6 flex items-center">
+        <mat-icon class="text-blue-500 mr-2">notifications_active</mat-icon>
+        <h2 class="text-xl font-semibold">Create Notification</h2>
+      </div>
+
+      <div class="space-y-5">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter notification title" />
+          <mat-icon matSuffix class="text-gray-400">title</mat-icon>
+          
+          @if(notificationControls.title.hasError('minlength')) {
+            <mat-error>
+              Title must be at least {{ notificationControls.title.errors.minlength.requiredLength }} characters long
+            </mat-error>
+          }
+          @if(notificationControls.title.hasError('maxlength')) {
+            <mat-error>
+              Title cannot be more than {{ notificationControls.title.errors.maxlength.requiredLength }} characters long
+            </mat-error>
+          }
+          @if(notificationControls.title.hasError('required')) {
+            <mat-error>
+              Title is required
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Enter notification details"></textarea>
+          <mat-icon matSuffix class="text-gray-400">description</mat-icon>
+          @if(notificationControls.description.hasError('required')) {
+            <mat-error>
+              Description is required
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Icon</mat-label>
+            <input matInput formControlName="icon" placeholder="e.g. info_outline" />
+            <mat-icon matSuffix class="text-gray-400">emoji_emotions</mat-icon>
+            <mat-hint>Enter Material icon name</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Link</mat-label>
+            <input matInput formControlName="link" placeholder="e.g. /dashboard" />
+            <mat-icon matSuffix class="text-gray-400">link</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="flex items-center mt-2 p-3 rounded-md bg-gray-50">
+          <mat-checkbox formControlName="useRouter" color="primary">
+            Use Angular Router
+          </mat-checkbox>
+          <mat-icon class="ml-2 text-gray-400" matTooltip="Navigate using Angular Router instead of regular URL">help_outline</mat-icon>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center mt-8">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          [disabled]="notificationForm.invalid"
+          class="px-6 py-2 rounded-full">
+          <mat-icon class="mr-2">send</mat-icon>
+          Send Notification
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- RIGHT: Recipients Selection -->
+    <mat-card class="w-full md:w-1/2 p-6 shadow-lg rounded-lg border-t-4 border-purple-500">
+      <div class="mb-6 flex items-center">
+        <mat-icon class="text-purple-500 mr-2">people_alt</mat-icon>
+        <h2 class="text-xl font-semibold">Select Recipients</h2>
+      </div>
+
+      <div class="bg-gray-50 p-4 rounded-md mb-5">
+        <mat-radio-group class="flex flex-col sm:flex-row justify-around gap-4"
+                       formControlName="recipientType">
+          <mat-radio-button value="users" (click)="unselectAllGroups()" color="primary" class="flex items-center">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 text-blue-500">person</mat-icon>
+              <span>Specific Users</span>
+            </div>
+          </mat-radio-button>
+          <mat-radio-button value="groups" (click)="unselectAllUsers()" color="primary" class="flex items-center">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 text-green-500">group</mat-icon>
+              <span>Specific Groups</span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Users Selection -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2 pb-2 border-b">
+          <h3 class="font-medium flex items-center">
+            <mat-icon class="mr-1 text-blue-500">person</mat-icon>
+            Users
+          </h3>
+          <div class="flex gap-2">
+            <button mat-stroked-button color="primary" type="button"
+                   (click)="selectAllUsers()"
+                   [disabled]="notificationForm.get('recipientType').value === 'groups'"
+                   class="text-sm">
+              <mat-icon class="text-sm mr-1">select_all</mat-icon>
+              Select All
+            </button>
+            <button mat-stroked-button color="warn" type="button"
+                   (click)="unselectAllUsers()"
+                   [disabled]="notificationForm.get('recipientType').value === 'groups'"
+                   class="text-sm">
+              <mat-icon class="text-sm mr-1">clear_all</mat-icon>
+              Clear All
+            </button>
+          </div>
+        </div>
+        
+        <div class="max-h-64 overflow-y-auto border rounded-lg bg-white">
+          <mat-selection-list
+            formControlName="selectedUsers"
+            [disabled]="notificationForm.get('recipientType').value === 'groups'">
+            @for (user of users; track user) {
+              <mat-list-option [value]="user._id" class="hover:bg-blue-50">
+                <div class="flex items-center">
+                  <img [src]="user.avatar" alt="User Avatar" class="w-8 h-8 rounded-full mr-2" />
+                  {{ user.name }}
+                </div>
+              </mat-list-option>
+            }
+            @empty {
+              <div class="p-4 text-center text-gray-500">
+                <mat-icon>info</mat-icon>
+                <p>No users available</p>
+              </div>
+            }
+          </mat-selection-list>
+        </div>
+      </div>
+      
+      <!-- Groups Selection -->
+      <div>
+        <div class="flex justify-between items-center mb-2 pb-2 border-b">
+          <h3 class="font-medium flex items-center">
+            <mat-icon class="mr-1 text-green-500">group</mat-icon>
+            Groups
+          </h3>
+          <div class="flex gap-2">
+            <button mat-stroked-button color="primary" type="button"
+                   (click)="selectAllGroups()"
+                   [disabled]="notificationForm.get('recipientType').value === 'users'"
+                   class="text-sm">
+              <mat-icon class="text-sm mr-1">select_all</mat-icon>
+              Select All
+            </button>
+            <button mat-stroked-button color="warn" type="button"
+                   (click)="unselectAllGroups()"
+                   [disabled]="notificationForm.get('recipientType').value === 'users'"
+                   class="text-sm">
+              <mat-icon class="text-sm mr-1">clear_all</mat-icon>
+              Clear All
+            </button>
+          </div>
+        </div>
+        
+        <div class="max-h-64 overflow-y-auto border rounded-lg bg-white">
+          <mat-selection-list
+            formControlName="selectedGroups"
+            [disabled]="notificationForm.get('recipientType').value === 'users'">
+            @for (group of groups; track group) {
+              <mat-list-option [value]="group.code" class="hover:bg-green-50">
+                <div class="flex items-center">
+                  <mat-icon class="mr-2 text-gray-500">groups</mat-icon>
+                  {{ group.label }}
+                </div>
+              </mat-list-option>
+            }
+            @empty {
+              <div class="p-4 text-center text-gray-500">
+                <mat-icon>info</mat-icon>
+                <p>No groups available</p>
+              </div>
+            }
+          </mat-selection-list>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</form>

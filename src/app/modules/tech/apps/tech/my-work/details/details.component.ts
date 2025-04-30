@@ -15,8 +15,9 @@ import { UserService } from 'app/shared/services/user.service';
 import { DatePipe } from '@angular/common';
 import { HistoryService } from 'app/shared/services/history.service';
 import { History } from 'app/shared/models/history';
-
- @Component({
+import { Notification } from 'app/layout/common/notifications/notifications.types';
+import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
+@Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.scss'],
@@ -45,6 +46,7 @@ export class DetailsComponent implements OnInit {
     _userService = inject(UserService)
     history:History = new History()
     _historyService = inject(HistoryService)
+    _notificationService= inject (NotificationsService)
     ngOnInit(): void {
         if (this.id) {
             this._loadingService.show()
@@ -97,6 +99,18 @@ export class DetailsComponent implements OnInit {
                         this._loadingService.hide()
                     }
                 })
+                const notification: Notification = {
+                    icon: 'search',
+                    title: `${this.complaint.technicianName} `,
+                    description: `${this.complaint.technicianName} Has started working on the complaint ${this.complaint.name}`,
+                    time: new Date().toString(),
+                    link: `/home/my-work/${this.complaint._id}`,
+                    useRouter: true,
+                    read: false,
+                    receiver:["admin","Tech_Supervisor"],
+                };
+
+                this._notificationService.create(notification).subscribe();
 
 
 

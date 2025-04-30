@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserService } from 'app/shared/services/user.service';
 import { HistoryService } from 'app/shared/services/history.service';
 import { History } from 'app/shared/models/history';
+import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
  @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -38,7 +39,7 @@ export class DetailsComponent implements OnInit {
     _router= inject(Router);
       _historyService = inject(HistoryService)
       history = new History()
-    
+    _notificationService= inject (NotificationsService)
     _route= inject(ActivatedRoute);
     _fuseConfirmationService= inject(FuseConfirmationService);
     _loadingService= inject(LoadingService);
@@ -99,6 +100,17 @@ export class DetailsComponent implements OnInit {
                     text: 'The technician has been assigned successfully.',
                     confirmButtonText: 'OK',
                 });
+                const notification={
+                    icon: 'task',
+                    title: 'New Task Assigned',
+                    description: `A new Task has been Assigned  ${this.complaint.code}`,
+                    time: new Date().toString(),
+                    link: `/home/my-work/${this.complaint._id}`,
+                    useRouter: true,
+                    read: false,
+                    userId: technicianId,
+                  }
+                  this._notificationService.create(notification).subscribe();
                 this._loadingService.hide()
                 this._router.navigate(['../'], { relativeTo: this._route }).then();
              

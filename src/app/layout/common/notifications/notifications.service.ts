@@ -1,12 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Notification } from 'app/layout/common/notifications/notifications.types';
+import { environment } from 'environments/environment';
 import { map, Observable, ReplaySubject, switchMap, take, tap } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class NotificationsService
 {
     private _notifications: ReplaySubject<Notification[]> = new ReplaySubject<Notification[]>(1);
+
+
+    private readonly apiUrl = `${environment.api}/common/notifications`
 
     /**
      * Constructor
@@ -36,7 +40,7 @@ export class NotificationsService
      */
     getAll(): Observable<Notification[]>
     {
-        return this._httpClient.get<Notification[]>('api/common/notifications').pipe(
+        return this._httpClient.get<Notification[]>(`${this.apiUrl}`).pipe(
             tap((notifications) =>
             {
                 this._notifications.next(notifications);
@@ -53,7 +57,7 @@ export class NotificationsService
     {
         return this.notifications$.pipe(
             take(1),
-            switchMap(notifications => this._httpClient.post<Notification>('api/common/notifications', {notification}).pipe(
+            switchMap(notifications => this._httpClient.post<Notification>(`${this.apiUrl}`, {notification}).pipe(
                 map((newNotification) =>
                 {
                     // Update the notifications with the new notification
@@ -76,14 +80,14 @@ export class NotificationsService
     {
         return this.notifications$.pipe(
             take(1),
-            switchMap(notifications => this._httpClient.patch<Notification>('api/common/notifications', {
+            switchMap(notifications => this._httpClient.patch<Notification>(`${this.apiUrl}`, {
                 id,
                 notification,
             }).pipe(
                 map((updatedNotification: Notification) =>
                 {
                     // Find the index of the updated notification
-                    const index = notifications.findIndex(item => item.id === id);
+                    const index = notifications.findIndex(item => item._id === id);
 
                     // Update the notification
                     notifications[index] = updatedNotification;
@@ -107,11 +111,11 @@ export class NotificationsService
     {
         return this.notifications$.pipe(
             take(1),
-            switchMap(notifications => this._httpClient.delete<boolean>('api/common/notifications', {params: {id}}).pipe(
+            switchMap(notifications => this._httpClient.delete<boolean>(`${this.apiUrl}`, {params: {id}}).pipe(
                 map((isDeleted: boolean) =>
                 {
                     // Find the index of the deleted notification
-                    const index = notifications.findIndex(item => item.id === id);
+                    const index = notifications.findIndex(item => item._id === id);
 
                     // Delete the notification
                     notifications.splice(index, 1);
@@ -133,7 +137,7 @@ export class NotificationsService
     {
         return this.notifications$.pipe(
             take(1),
-            switchMap(notifications => this._httpClient.get<boolean>('api/common/notifications/mark-all-as-read').pipe(
+            switchMap(notifications => this._httpClient.get<boolean>(`${this.apiUrl}/mark-all-as-read`).pipe(
                 map((isUpdated: boolean) =>
                 {
                     // Go through all notifications and set them as read
