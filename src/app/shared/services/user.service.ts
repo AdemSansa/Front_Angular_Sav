@@ -199,7 +199,7 @@ export class UserService {
     return false;
   }
   getTechs(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.endpointAuth}/group/67ec5dee6f757a0f46501b82`);
+    return this.http.get<User[]>(`${this.endpointAuth}/group/6812953b6b105611dc6e03c8`);
 
 
   }
