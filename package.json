@@ -27,6 +27,7 @@
     "apexcharts": "3.44.0",
     "crm-nova-angular": "file:",
     "crypto-js": "3.3.0",
+    "heroicons": "^2.2.0",
     "highlight.js": "11.9.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",

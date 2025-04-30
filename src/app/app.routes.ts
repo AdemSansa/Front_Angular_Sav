@@ -216,7 +216,21 @@ export const appRoutes: Route[] = [
                             breadcrumb: 'Profile',
                             feature: FeatureCodes.profile,
                         },
-                        loadChildren: () => import('app/modules/profile/profile.routes'),}
+                        loadChildren: () => import('app/modules/profile/profile.routes'),
+                    }
+                    ,
+
+                    {
+                        canActivate: [IsAuthorizedGuard],
+                        canActivateChild: [IsAuthorizedGuard],
+                        path:"notifications",
+                        data: {
+                            breadcrumb: 'Notifications',
+                            feature: FeatureCodes.notifications,
+                        },
+                        loadChildren: () => import('app/modules/admin/apps/notifications/notifications.routes'),
+
+                    }    
                     
                 ],
             },

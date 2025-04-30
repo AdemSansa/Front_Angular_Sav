@@ -14,6 +14,7 @@ import { UserService } from 'app/shared/services/user.service';
 import { Company } from 'app/shared/models/company';
 import { ComplaintService } from 'app/shared/services/complaint.service';
 import { Complaint } from 'app/shared/models/complaint';
+import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 
 @Component({
   selector: 'app-report',
@@ -32,6 +33,7 @@ import { Complaint } from 'app/shared/models/complaint';
 })
 export class ReportComponent {
   report = new Report()
+  _notificationService  = inject(NotificationsService);
 
   _complaintService= inject(ComplaintService);
 
@@ -68,6 +70,17 @@ addOne(myForm: NgForm): void {
               console.log(res);
             })
           });
+          const notification={
+            icon: 'report',
+            title: 'New Report Created',
+            description: `A new report has been created for complaint ID ${this.complaint.code}`,
+            time: new Date().toString(),
+            link: `/home/complaints/${this.report.complaintId}`,
+            useRouter: true,
+            read: false,
+            receiver:["admin","Tech_Supervisor"],
+          }
+          this._notificationService.create(notification).subscribe();
             
           this._router.navigate([`../`], { relativeTo: this._activatedRoute }).then();
         })

@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 import { Notification } from 'app/layout/common/notifications/notifications.types';
 import { Subject, takeUntil } from 'rxjs';
+import { MatIconRegistry } from '@angular/material/icon';
 
 @Component({
     selector: 'notifications',
@@ -16,7 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'notifications',
-    imports: [MatButtonModule, MatIconModule, MatTooltipModule, NgClass, NgTemplateOutlet, RouterLink, DatePipe]
+    imports: [MatButtonModule, MatIconModule, MatTooltipModule, NgClass, NgTemplateOutlet, RouterLink, DatePipe ]
 })
 export class NotificationsComponent implements OnInit, OnDestroy
 {
@@ -49,20 +50,15 @@ export class NotificationsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.getList();
+        setInterval(() => {
+            this.getList();
+        }
+        , 10000); // Refresh every minute
         // Subscribe to notification changes
-        this._notificationsService.notifications$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((notifications: Notification[]) =>
-            {
-                // Load the notifications
-                this.notifications = notifications;
+       
 
-                // Calculate the unread count
-                this._calculateUnreadCount();
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
     }
 
     /**
@@ -88,6 +84,25 @@ export class NotificationsComponent implements OnInit, OnDestroy
     /**
      * Open the notifications panel
      */
+    getList(){
+        this._notificationsService.getAll()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((notifications: Notification[]) =>
+        {
+            // Load the notifications
+            this.notifications = notifications;
+            console.log('this.notifications', this.notifications);
+            
+
+            // Calculate the unread count
+            this._calculateUnreadCount();
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+    
+
+    }
     openPanel(): void
     {
         // Return if the notifications panel or its origin is not defined
@@ -130,9 +145,11 @@ export class NotificationsComponent implements OnInit, OnDestroy
     {
         // Toggle the read status
         notification.read = !notification.read;
+        this.unreadCount = this.unreadCount - (notification.read ? 1 : -1);
 
         // Update the notification
-        this._notificationsService.update(notification.id, notification).subscribe();
+        this._notificationsService.update(notification._id, notification).subscribe();
+        this._changeDetectorRef.detectChanges();
     }
 
     /**
@@ -141,7 +158,7 @@ export class NotificationsComponent implements OnInit, OnDestroy
     delete(notification: Notification): void
     {
         // Delete the notification
-        this._notificationsService.delete(notification.id).subscribe();
+        this._notificationsService.delete(notification._id).subscribe();
     }
 
     /**

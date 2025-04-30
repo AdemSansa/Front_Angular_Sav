@@ -1,8 +1,8 @@
-import { User } from "app/shared/models/user";
+import { User } from "./user";
 
-export interface Notification
-{
+export class Notification {
     _id?: string;
+    userId?: User | string;
     icon?: string;
     image?: string;
     title?: string;
@@ -11,6 +11,4 @@ export interface Notification
     link?: string;
     useRouter?: boolean;
     read: boolean;
-    receiver?: string[];
-    userIds?: string[];
 }
