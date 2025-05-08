@@ -4,6 +4,8 @@ import { IssuesComponent } from "./issues/issues.component";
 import { DetailsComponent  as IssueDetailsComponent} from "./issues/details/details.component";
 import { DetailsComponent as allRequestsDetailsComponent } from "./all-requests/details/details.component";
 import { ProfileComponent } from "app/modules/profile/profile.component";
+import { MyTechniciansComponent } from "./my-technicians/my-technicians.component";
+import { DetailsComponent } from "./my-technicians/details/details.component";
 
 export default [
 {
@@ -56,6 +58,26 @@ export default [
                         breadcrumb: 'Details',
                     }
                 }
+            ]
+
+        },
+        {
+            path:'my-technicians',
+            children:[
+                {
+                    path:'',
+                    component: MyTechniciansComponent,
+                    data:{
+                        breadcrumb:'My Technicians'
+                    }
+                },
+                {
+                    path: 'details/:id',
+                    component: DetailsComponent,
+                    data: {
+                        breadcrumb: 'Details',
+                    }
+                } 
             ]
 
         }

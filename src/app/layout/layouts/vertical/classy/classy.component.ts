@@ -62,14 +62,12 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
  
         this.breadcrumbsService.breadcrumbs$.subscribe((breadcrumbs: Breadcrumb[]) => {
             this.breadcrumbs = breadcrumbs;
-            console.log('this.breadcrumbs', this.breadcrumbs);
             
         }
         );
         this.menuService.getMenu().subscribe({
             next: (data) => {
                 this.navigation = data.menu;
-                console.log('this.navigation', this.navigation)
             },
             error: () => {},
         });
@@ -81,7 +79,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
             .subscribe((user: User) =>
             {
                 this.user = user;
-                console.log('user', user);
                 
             });
 
@@ -95,7 +92,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
             });
             this._userService.get().subscribe((user) => {
                 this.userInfo = user;
-                console.log('userInfo', this.userInfo);
             }
             );
             

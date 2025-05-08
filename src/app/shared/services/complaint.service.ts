@@ -73,10 +73,27 @@ export class ComplaintService {
     params: searchParams,
   });
 }
-getMywork(id:string)
+getMywork(id:string,
+  limit: string,
+    page: string,
+    search: string,
+    filterType:string,
+    filterStatus:string,
+ )
 : Observable<Pagination<Complaint>> {
   let searchParams = new HttpParams();
   searchParams = searchParams.append('id', id);
+  searchParams = searchParams.append('limit', limit);
+  searchParams = searchParams.append('page', page);
+  if (search) {
+    searchParams = searchParams.append('search', search);
+  }
+  if (filterType) {
+    searchParams = searchParams.append('filterType', filterType);
+  }
+  if (filterStatus) {
+    searchParams = searchParams.append('filterStatus', filterStatus);
+  }
   return this.http.get<Pagination<Complaint>>(`${this.endpoint}/requests/my-work`, {
     params: searchParams,
   }
@@ -112,8 +129,32 @@ getUnderReviwedComplaints( limit: string,
     params: searchParams,
   });
 }
+getComplaintsByUser(UserId:string, limit: string,
+  page: string,
+  search: string,
+  filterType:string,
+  filterStatus:string,
+): Observable<Pagination<Complaint>> {
+  let searchParams = new HttpParams();
+  searchParams = searchParams.append('userId', UserId);
+  searchParams = searchParams.append('limit', limit);
+  searchParams = searchParams.append('page', page);
+  if (search) {
+    searchParams = searchParams.append('search', search);
+  }
+  if (filterType) {
+    searchParams = searchParams.append('filterType', filterType);
+  }
+  if (filterStatus) {
+    searchParams = searchParams.append('filterStatus', filterStatus);
+  }
+  return this.http.get<Pagination<Complaint>>(`${this.endpoint}/requests/user/${UserId}`, {
+    params: searchParams,
+  });
+
 
   
 }
 
+}
 

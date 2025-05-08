@@ -93,7 +93,6 @@ export class ListComponent implements OnInit {
   }
   getList(): void {
     this._loadingService.show();
-    console.log( this.filterStatus);
 
     
     this._complaintService

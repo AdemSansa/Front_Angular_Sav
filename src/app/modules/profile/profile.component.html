@@ -108,7 +108,65 @@
       </div>
     </div>
   </div>
+  
+<!-- Statistics Cards Section -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Total Complaints -->
+  <div
+    class="cursor-pointer bg-indigo-50 dark:bg-indigo-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+    (click)="selectedComplaintType = selectedComplaintType === 'total' ? null : 'total'"
+  >
+    <h4 class="text-xl font-semibold text-indigo-800 dark:text-indigo-300">Total Complaints</h4>
+    <p class="text-4xl font-bold text-indigo-600 dark:text-white mt-2">{{ totalComplaints }}</p>
+  </div>
+
+  <!-- Resolved Complaints -->
+  <div
+    class="cursor-pointer bg-green-50 dark:bg-green-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+    (click)="selectedComplaintType = selectedComplaintType === 'resolved' ? null : 'resolved'"
+  >
+    <h4 class="text-xl font-semibold text-green-800 dark:text-green-300">Resolved Complaints</h4>
+    <p class="text-4xl font-bold text-green-600 dark:text-white mt-2">{{ resolvedComplaints }}</p>
+  </div>
+
+  <!-- Pending Complaints -->
+  <div
+    class="cursor-pointer bg-yellow-50 dark:bg-yellow-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+    (click)="selectedComplaintType = selectedComplaintType === 'pending' ? null : 'pending'"
+  >
+    <h4 class="text-xl font-semibold text-yellow-800 dark:text-yellow-300">Pending Complaints</h4>
+    <p class="text-4xl font-bold text-yellow-600 dark:text-white mt-2">{{ pendingComplaints }}</p>
+  </div>
 </div>
+
+<!-- Complaints List -->
+ @if (selectedComplaintType) {
+<div  class="mt-6 bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+  <input
+  type="text"
+  placeholder="Search by code or title..."
+  [(ngModel)]="searchTerm"
+  class="mb-4 w-full px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+/>
+  <h4 class="text-xl font-bold mb-4 text-gray-900 dark:text-white capitalize">
+    {{ selectedComplaintType }} Complaints
+  </h4>
+  <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+    @for (complaint of filteredComplaints; track complaint) {
+
+      <a
+        [routerLink]="[ '/home/my-work/', complaint._id ]"
+        class="block hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+    <li  class="py-4">
+      <p class="text-gray-800 dark:text-white font-medium">#{{ complaint.code }} — {{ complaint.title }}</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">{{ complaint.createdAt | date:'medium' }}</p>
+    </li>
+  </a>
+  }
+  </ul>
+</div>
+ }
+
 
 <!-- Tailwind CSS for styling -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">

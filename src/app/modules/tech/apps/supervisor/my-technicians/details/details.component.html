@@ -1,0 +1,107 @@
+<div class="grid grid-cols-1 lg:grid-cols-[auto,1fr] gap-6 w-full">
+    <!-- Technician Profile (Left Column) -->
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 flex flex-col items-center text-center">
+      <!-- Avatar -->
+      <div class="mb-4 p-1 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 animate-gradient">
+        <img
+          [src]="tech?.avatar"
+          alt="Avatar"
+          class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800"
+          onerror="this.src='https://i.pravatar.cc/150?u=' + tech?.email"
+        />
+      </div>
+  
+      <!-- Info -->
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+        {{ tech?.name }}
+      </h2>
+  
+      <p class="text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 text-sm mb-1">
+        <mat-icon>email</mat-icon>{{ tech?.email }}
+      </p>
+  
+      <p class="text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 text-sm mb-1">
+        <mat-icon>badge</mat-icon>{{ tech?.groupsId?.label || 'Technician' }}
+      </p>
+  
+      <p class="text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 text-sm mb-3">
+        <mat-icon>calendar_today</mat-icon>Joined on {{ tech?.createdAt | date: 'longDate' }}
+      </p>
+  
+      <!-- Status badge -->
+      <div>
+        <mat-chip
+          [ngClass]="{
+            'bg-green-100 text-green-800': tech?.status === 'online',
+            'bg-yellow-100 text-yellow-800': tech?.status === 'busy',
+            'bg-red-100 text-red-800': tech?.status === 'not-visible',
+            'bg-gray-100 text-gray-800': !['online', 'busy', 'not-visible'].includes(tech?.status)
+          }"
+        >
+          {{ tech?.status === 'online' ? 'Available Now' :
+             tech?.status === 'busy' ? 'Busy' :
+             tech?.status === 'not-visible' ? 'Not Visible' : 'Unknown' }}
+        </mat-chip>
+      </div>
+    </div>
+  
+    <!-- Statistics + Complaint List (Right Column) -->
+    <div class="space-y-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 w-full">
+      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Complaints Overview</h3>
+  
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div
+          class="cursor-pointer bg-indigo-50 dark:bg-indigo-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+          (click)="selectedComplaintType = selectedComplaintType === 'total' ? null : 'total'"
+        >
+          <h4 class="text-lg font-semibold text-indigo-800 dark:text-indigo-300">Total Complaints</h4>
+          <p class="text-3xl font-bold text-indigo-600 dark:text-white mt-2">{{ totalcomplaints }}</p>
+        </div>
+  
+        <div
+          class="cursor-pointer bg-green-50 dark:bg-green-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+          (click)="selectedComplaintType = selectedComplaintType === 'resolved' ? null : 'resolved'"
+        >
+          <h4 class="text-lg font-semibold text-green-800 dark:text-green-300">Resolved</h4>
+          <p class="text-3xl font-bold text-green-600 dark:text-white mt-2">{{ resolvedComplaints }}</p>
+        </div>
+  
+        <div
+          class="cursor-pointer bg-yellow-50 dark:bg-yellow-900 rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition"
+          (click)="selectedComplaintType = selectedComplaintType === 'pending' ? null : 'pending'"
+        >
+          <h4 class="text-lg font-semibold text-yellow-800 dark:text-yellow-300">Pending</h4>
+          <p class="text-3xl font-bold text-yellow-600 dark:text-white mt-2">{{ pendingComplaints }}</p>
+        </div>
+      </div>
+  
+      <!-- Complaints List -->
+      @if (selectedComplaintType) {
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+          <input
+            type="text"
+            placeholder="Search by code or title..."
+            [(ngModel)]="searchTerm"
+            class="mb-4 w-full px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+  
+          <h4 class="text-xl font-bold mb-4 text-gray-900 dark:text-white capitalize">
+            {{ selectedComplaintType }} Complaints
+          </h4>
+  
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700 max-h-80 overflow-y-auto pr-2">
+            @for (complaint of filteredComplaints; track complaint) {
+              <a class="block hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                <li class="py-4">
+                  <p class="text-gray-800 dark:text-white font-medium">#{{ complaint.code }} — {{ complaint.title }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ complaint.createdAt | date:'medium' }}</p>
+                </li>
+              </a>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+  

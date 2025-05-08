@@ -1,0 +1,119 @@
+<!-- Enhanced Technicians Component with Angular Material + Tailwind -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Header Section with Search & Filters -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+          Our Expert Technicians
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">Find the perfect specialist for your technical needs</p>
+      </div>
+      
+    </div>
+  
+    <!-- Technicians Grid -->
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @for (tech of technicians; track tech._id) {
+          <mat-card class="relative h-full transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
+            <!-- 👇 Added "relative" class to mat-card -->
+      
+            <!-- Availability Badge -->
+            <div class="absolute top-4 right-4 z-10">
+              <mat-chip-list>
+                <mat-chip [ngClass]="{
+                  'bg-green-100 text-green-800': tech.status === 'online',
+                  'bg-yellow-100 text-yellow-800': tech.status === 'busy',
+                  'bg-red-100 text-red-800': tech.status === 'not-visible',
+                  'bg-gray-100 text-gray-800': !['online', 'busy', 'not-visible'].includes(tech.status)
+                }">
+                  {{
+                    tech.status === 'online' ? 'Available Now' :
+                    tech.status === 'busy' ? 'Busy' :
+                    tech.status === 'not-visible' ? 'Not Visible' : 'Unknown'
+                  }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+      
+            <div class="p-6 flex flex-col items-center">
+              <!-- Avatar -->
+              <div class="p-1 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-gradient">
+                <img
+                  [src]="tech.avatar"
+                  [alt]="tech.name + ' Avatar'"
+                  class="w-24 h-24 rounded-full object-cover border-2 border-white"
+                  onerror="this.src='https://i.pravatar.cc/150?u=' + this.alt"
+                />
+              </div>
+      
+              <h3 class="mt-4 text-xl font-bold text-gray-900">{{ tech.name }}</h3>
+      
+              <div class="mt-1 flex items-center gap-1">
+                <mat-icon class="text-indigo-500 text-sm">work</mat-icon>
+                <span class="text-sm font-medium text-indigo-600">{{ tech.groupsId?.label || 'Technician' }}</span>
+              </div>
+      
+              <div class="mt-2 flex items-center gap-1">
+                <mat-icon class="text-gray-400 text-sm">email</mat-icon>
+                <span class="text-sm text-gray-500">{{ tech.email }}</span>
+              </div>
+      
+              <div class="mt-1 flex items-center gap-1">
+                <mat-icon class="text-gray-400 text-sm">calendar_today</mat-icon>
+                <span class="text-sm text-gray-500">Joined: {{ tech.createdAt | date:'mediumDate' }}</span>
+              </div>
+      
+              <mat-card-actions class="mt-6 flex gap-2 w-full">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="flex-1"
+                  (click)="viewTechnicianDetails(tech._id)"
+                >
+                  View Details
+                </button>
+              </mat-card-actions>
+            </div>
+          </mat-card>
+        }
+      </div>
+    
+    <!-- Pagination -->
+    
+  
+  <!-- Add these styles to your component CSS or global styles -->
+  <style>
+    .animate-gradient {
+      background-size: 200% 200%;
+      animation: gradient 3s ease infinite;
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Angular Material customization */
+    ::ng-deep .mat-form-field-wrapper {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    ::ng-deep .mat-card {
+      border-radius: 1rem;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Status badge animations */
+    ::ng-deep .mat-chip.bg-green-100 {
+      animation: pulse-green 2s infinite;
+    }
+    
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+      70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+  </style>

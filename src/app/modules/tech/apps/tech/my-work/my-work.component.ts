@@ -15,6 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { TranslocoPipe } from '@ngneat/transloco';
+import { limits } from 'chroma-js';
 
 @Component({
   selector: 'app-my-work',
@@ -58,11 +59,9 @@ export class MyWorkComponent {
   userId: string 
 
     ngOnInit(): void {
-      this._userService.getUserProfile().subscribe((user) => {
-        this.userId = user._id;
-        this.getList(this.userId);
-      }
-      );
+     
+
+      this.getList();
       
     }
     pageChanged(event: PageEvent ): void {
@@ -75,21 +74,28 @@ export class MyWorkComponent {
       }
       this.currentSize = pageSize;
       this.currentPage = pageIndex;
-      this.getList(this.userId);
+      this.getList();
     }
-    getList(id:string): void {
+    getList(): void {
       this._loadingService.show();
+      const token =  this._userService.getToken();
+      this.userId = this._userService.decodeToken(token)["id"];
+    
       this._complaintService.getMywork(
-        id
+        this.userId,
+        this.currentSize.toString(),
+        this.currentPage.toString(),
+        this.filterSearch,
+        this.filterType.toString(),
+        this.filterStatus.toString(),
+
         )
         .subscribe({
             next: results => {
                 this.displayedList = results;
-                console.log(this.displayedList);
-                
-                results.data.forEach((item: Complaint) => {
+                   results.data.forEach((item: Complaint) => {
                   this._userService.getOne(item.assignedTo).subscribe((user) => {
-                    item.assignedTo = user.name;
+                    item.technicianName = user.name;
                   })
                 })
                 
@@ -112,14 +118,14 @@ export class MyWorkComponent {
       this.filterOptions.search = this.filterSearch;
       this.typingTimer = setTimeout(() => {
         this.paginator?.firstPage();
-        this.getList( this.userId);
+        this.getList( );
       }, this.doneTypingInterval);
     }
    
     refresh(): void {
       clearTimeout(this.typingTimer);
       this.typingTimer = setTimeout(() => {
-        this.getList( this.userId);
+        this.getList( );
       }, this.doneTypingInterval);
     }
   }
