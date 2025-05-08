@@ -137,16 +137,7 @@ export const appRoutes: Route[] = [
                         },
                         loadChildren: () => import('app/modules/admin/apps/texts/texts.routing'),
                     },
-                    {
-                        canActivate: [IsAuthorizedGuard],
-                        canActivateChild: [IsAuthorizedGuard],
-                        path: 'pages',
-                        data: {
-                            breadcrumb: 'Pages',
-                            feature: FeatureCodes.pages,
-                        },
-                        loadChildren: () => import('app/modules/admin/apps/pages/pages.routing'),
-                    },
+                    
                     {
                         canActivate: [IsAuthorizedGuard],
                         canActivateChild: [IsAuthorizedGuard],
@@ -157,16 +148,7 @@ export const appRoutes: Route[] = [
                         },
                         loadChildren: () => import('app/modules/admin/apps/excursions/excursions.routing'),
                     },
-                    {
-                        canActivate: [IsAuthorizedGuard],
-                        canActivateChild: [IsAuthorizedGuard],
-                        path:'products',
-                        data: {
-                            breadcrumb: 'Products',
-                            feature: FeatureCodes.products,
-                        },
-                        loadChildren: () => import('app/modules/admin/apps/products/products.routing'),
-                    },
+                 
                     {
                         canActivate: [IsAuthorizedGuard],
                         canActivateChild: [IsAuthorizedGuard],

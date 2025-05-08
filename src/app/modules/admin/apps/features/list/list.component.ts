@@ -82,7 +82,6 @@ export class ListComponent implements OnInit {
     this.getList();
   }
   getList(): void {
-    console.log(this.filterStatus, this.filterType);
     
     this._loadingService.show();
     this._featureService

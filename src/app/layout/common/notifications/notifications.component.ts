@@ -24,6 +24,8 @@ export class NotificationsComponent implements OnInit, OnDestroy
     @ViewChild('notificationsOrigin') private _notificationsOrigin: MatButton;
     @ViewChild('notificationsPanel') private _notificationsPanel: TemplateRef<any>;
 
+
+    private _previousUnreadCount: number = 0;
     notifications: Notification[];
     unreadCount: number = 0;
     private _overlayRef: OverlayRef;
@@ -52,6 +54,10 @@ export class NotificationsComponent implements OnInit, OnDestroy
     {
         this.getList();
         setInterval(() => {
+            // when refreshing and user has a new notification it opens the notifpanel
+            // this._overlayRef.detach();
+            this._overlayRef?.detach();
+        
             this.getList();
         }
         , 10000); // Refresh every minute
@@ -89,16 +95,26 @@ export class NotificationsComponent implements OnInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((notifications: Notification[]) =>
         {
-            // Load the notifications
+            // Load notifications
             this.notifications = notifications;
-            console.log('this.notifications', this.notifications);
-            
 
-            // Calculate the unread count
-            this._calculateUnreadCount();
+            // Calculate unread count
+            const currentUnreadCount = notifications.filter(n => !n.read).length;
+
+            // Compare with previous
+            if (currentUnreadCount > this._previousUnreadCount) {
+                this.openPanel(); // Open if new unread notifications
+            }
+
+            // Update stored count
+            this._previousUnreadCount = currentUnreadCount;
+
+            // Update displayed unread count
+            this.unreadCount = currentUnreadCount;
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
+   
         });
     
 

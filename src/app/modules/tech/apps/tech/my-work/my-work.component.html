@@ -35,7 +35,7 @@
           <div class="flex-1 sm:grid sm:flex-0">
             <!-- Rows -->
             <ng-container>
-              @for (row of displayedList?.data; track row) {
+              @for (row of displayedList?.data; track row._id) {
                 
              
               <div class="row-grid grid items-center gap-4 py-1 px-4 md:px-6 border-b"  [class.bg-red-200]="row.status === 'Under Review'" [class.bg-green-100]="row.status==='Resolved'"  (click)="isScreenSmall ? openShow(row) : null">
@@ -78,7 +78,7 @@
                 }
                 @if (row.assignedTo) {
                     <div class="hidden sm:flex items-center px-2 py-1 text-sm font-medium text-green-700 bg-green-200 rounded-lg">
-                        {{ row.assignedTo }}
+                        {{ row.technicianName }}
                     </div>
                 }
                 @if (!row.assignedTo) {
