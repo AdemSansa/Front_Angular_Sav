@@ -80,6 +80,13 @@
                       </div>
                        
                         }
+                        <div class="sm:col-span-3">
+                          <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                              <mat-label class="capitalize">{{ 'Actual Site ' | transloco }}</mat-label>
+                              <!-- show the days and add days in a string-->
+                              <input [(ngModel)]="complaint.actualSite.name" matInput name="site" type="text" readonly />
+                          </mat-form-field>
+                      </div>
                                                  
                     </div>
                     @for (item of report; track item._id) {

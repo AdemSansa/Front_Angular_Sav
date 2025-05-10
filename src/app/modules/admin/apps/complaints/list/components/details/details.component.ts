@@ -79,7 +79,7 @@ export class DetailsComponent implements OnInit {
         this.getHistory();
     }
     updateOne() {
-        this._router.navigate([`/home/companies/${this.complaint._id}/edit`]).then();
+        this._router.navigate([`/home/complaints/${this.complaint._id}/edit`]).then();
     }
     deleteOne() {
         // Open the confirmation dialog
